@@ -1,0 +1,156 @@
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import { useSelector, useDispatch } from "react-redux";
+// import { PaystackButton } from "react-paystack";
+// import { useRouter } from "next/router";
+// import Swal from "sweetalert2";
+// import NavBar from "@/Components/NavBar";
+
+// const CheckOut = () => {
+//   const router = useRouter();
+//   const [loading, setLoading] = useState(true);
+//   const [localData, setData] = useState([]);
+//   const [email, setEmail] = useState("");
+//   const userLoginEmail = useSelector(
+//     (state) => state.ReduxValues.CustomerEmail
+//   );
+//   let url = "http://localhost:7000/customer/getDashBoard";
+//   useEffect(() => {
+//     let token = window.localStorage.token;
+
+//     axios
+//       .get(url, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "application/json",
+//           Accept: "application/json",
+//         },
+//       })
+//       .then((res) => {
+//         if (!res.data.status) {
+//           router.push("/CheckOutLogin");
+//         }
+//       });
+//   });
+//   let lastPrice = '';
+//   const IdAndPrice = localStorage.getItem("carId");
+//   if (IdAndPrice) {
+//     let carIdAndPrice = JSON.parse(IdAndPrice);
+//     let checkOutPrice = carIdAndPrice.Price
+//     lastPrice = checkOutPrice
+//   }
+
+//   const config = {
+//     reference: new Date().getTime().toString(),
+//     email: "okikiolalawal18@gmail.com",
+//     amount: lastPrice*100, //Amount is in the country's lowest currency. E.g Kobo, so 20000 kobo = N200
+//     publicKey: "pk_test_ea4c9b4f0591ec661174704f63adaadf2b2a2423",
+//   };
+
+//   // you can call this function anything
+//   const handlePaystackSuccessAction = async (reference) => {
+//     // Implementation for whatever you want to do with reference and after success call.
+//     // console.log(reference);
+//     try {
+//       axios
+//         .post("http://localhost:7000/payment/verifyPayment", reference)
+//         .then((res) => {
+//           console.log(res);
+//           if (res.data.status) {
+//             const bookingRef = res.data.ref;
+//             const data = localStorage.getItem("PickAndDrop");
+//             const IdAndPrice = localStorage.getItem("carId");
+//             const email = localStorage.getItem("userEmail");
+//             if (data && IdAndPrice && email) {
+//               let carIdAndPrice = JSON.parse(IdAndPrice);
+//               // console.log(carIdAndPrice);
+//               let parsedPickUpAndDrop = JSON.parse(data);
+//               let carName = carIdAndPrice.Make +' '+ carIdAndPrice.Model + ' '+ carIdAndPrice.Year
+//               // console.log(parsedPickUpAndDrop);
+//               const bookingsObj = {
+//                 carName,
+//                 email,
+//                 bookingRef,
+//                 carId: carIdAndPrice.carId,
+//                 pickUp: parsedPickUpAndDrop.branch,
+//                 droppingBranch: parsedPickUpAndDrop.dropBranch,
+//               };
+//               const paymentObj = {
+//                 email,
+//                 bookingRef,
+//                 carId: carIdAndPrice.carId,
+//                 price: carIdAndPrice.Price,
+//               };
+//               console.log(paymentObj);
+//               axios.post(
+//                 "http://localhost:7000/payment/addPayment",
+//                 paymentObj
+//               ).
+//               then((response) => {
+//                 if (response.data.status) {
+//                   try {
+//                     axios
+//                       .post("http://localhost:7000/car/addBooking", bookingsObj)
+//                       .then((res) => {
+//                         if (res.data.status) {
+//                           Swal.fire("Success", res.data.message, "success");
+//                           router.push("/DashBoard");
+//                         }
+//                       });
+//                   } catch (error) {}
+//                 }
+//               });
+//               // console.log(bookingsObj);
+//               // router.push("/DashBoard");
+//             }
+//           }
+//         });
+//     } catch (error) {}
+//   };
+
+//   // you can call this function anything
+//   const handlePaystackCloseAction = () => {
+//     // fetch("./api/parttsr").then((res) => res.json()).then((data) => console.log(data)).catch((err) => console.log(err))
+
+//     // implementation for  whatever you want to do when the Paystack dialog closed.
+//     console.log("closed");
+//   };
+
+//   const componentProps = {
+//     ...config,
+//     text: "Continue to Payment",
+//     onSuccess: (reference) => handlePaystackSuccessAction(reference),
+//     onClose: handlePaystackCloseAction,
+//   };
+
+//   return (
+//     <div className="">
+//       <NavBar></NavBar>
+//       <div className=" d-flex justify-content-center my-5 align-items-center container-fluid">
+
+//       <div className="border rounded-3 col-3 mx-auto">
+//         <h3 className="text-center border-bottom p-3">CheckOut</h3>
+        
+//         <div className="d-flex justify-content-between fs-5 p-3 bg-light container-fluid">
+//           <div>Email:</div>
+//           <div>okikiolalawal18@gmail.com</div>
+//         </div>
+        
+//         <div className="d-flex justify-content-between fs-5 p-3 border-bottom">
+//           <div>Price:</div>
+//           <div>{lastPrice}</div>
+//         </div>
+//         <div className="p-3">
+//           <PaystackButton
+//             {...componentProps}
+//             className="form-control btn-dark btn"
+//           />
+//           {/* <Link href={'/DashBoard'} className='form-control btn-primary btn'>Done</Link> */}
+//         </div>
+//       </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default CheckOut;
