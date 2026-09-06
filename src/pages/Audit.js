@@ -40,6 +40,7 @@ export default function ViewTransactions() {
 
       if (response.data.status) {
         const transactions = response.data.transactions;
+        // console.log(transactions)
         setTransactions(transactions);
 
         const total = transactions.reduce(
@@ -137,7 +138,7 @@ export default function ViewTransactions() {
                     {transactions.map((transaction, index) => (
                       <Tr key={index}>
                         <Td>
-                          {new Date(transaction.DatePayed).toLocaleDateString()}
+                          {new Date(transaction.datePaid).toLocaleDateString()}
                         </Td>
                         <Td>
                           ₦{Number(transaction.amountPaid).toLocaleString()}

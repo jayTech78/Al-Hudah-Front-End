@@ -1,46 +1,60 @@
- import { Box, Heading, Text, Flex } from "@chakra-ui/react";
+import fs from "fs";
+import path from "path";
 import Image from "next/image";
-import LandingPageNav from "../Components/LandingPageNav";
+import {
+    Grid,
+    Box
+} from "@chakra-ui/react";
+import LandingPageNav from "@/Components/LandingPageNav";
 
-export default function About() {
-  return (
-    <>
-      <LandingPageNav />
-      <Text bg="white" py={5} textAlign="center" fontSize="2xl" fontWeight="bold">
-        Contact
-      </Text>
-      <Box p={5} textColor="white">
-        <Flex wrap="wrap" justify="center" gap={6}>
-          <Box bg="green.500" p={5} borderRadius="lg" w="250px">
-            <Heading size="md">Address</Heading>
-            <Text mt={2}>
-              Plot 7/9, Al-Hudah Street, Labaiwa Village, Itoko-Titun, Oke-Aregba, Abeokuta, Ogun State
-            </Text>
-          </Box>
-          <Box bg="green.500" p={5} borderRadius="lg" w="250px">
-            <Heading size="md">Facebook</Heading>
-            <Text mt={2}>Al-Hudah Group Of Schools</Text>
-          </Box>
-          <Box bg="green.500" p={5} borderRadius="lg" w="250px">
-            <Heading size="md">Phone No</Heading>
-            <Text mt={2}>
-              08033809331 <br /> 08033663636<br/> 08062509150
-            </Text>
-          </Box>
-          <Box bg="green.500" p={5} borderRadius="lg" w="250px">
-            <Heading size="md">Email</Heading>
-            <Text mt={2}>al-hudahnurseryand primaryschool@gmail.com <br/>
-            alhudahmodelcollege@gmail.com</Text>
-          </Box>
-        </Flex>
-      </Box>
 
-      {/* Logo Display */}
-      <Flex justify="center" mt={8} mb={10}>
-        <Image src="/logo-removebg-preview.png" width={200} height={150} alt="School Logo" />
-      </Flex>
+export async function getStaticProps() {
+    const galleryPath = path.join(process.cwd(), "public", "gallery");
 
-      <section id="Footer">
+    const images = fs
+        .readdirSync(galleryPath)
+        .filter((file) => /\.(jpg|jpeg|png|webp|gif)$/i.test(file));
+
+    return {
+        props: {
+            images,
+        },
+    };
+}
+
+export default function Gallery({ images }) {
+    return (
+        <div>
+            <LandingPageNav></LandingPageNav>
+            <h1 className="text-center p-3 text-success">GALLERY</h1>
+            <Grid
+                templateColumns={{
+                    base: "1fr",       // phones
+                    sm: "repeat(2, 1fr)", // larger phones
+                    md: "repeat(2, 1fr)", // tablets
+                    lg: "repeat(4, 1fr)", // desktop
+                }}
+                gap={{ base: 3, md: 5, lg: 6 }}
+                p={4}
+            >
+                {images.map((image) => (
+                    <Box key={image} overflow="hidden" borderRadius="md">
+                        <Image
+                            src={`/gallery/${image}`}
+                            alt={image}
+                            width={300}
+                            height={200}
+                            style={{
+                                width: "100%",
+                                height: "auto",
+                                objectFit: "cover",
+                            }}
+                        />
+                    </Box>
+                ))}
+            </Grid>
+
+            <section id="Footer">
         <div className="bg-success text-white">
           <div className="container">
             <div className="row p-5">
@@ -89,6 +103,6 @@ export default function About() {
           </div>
         </div>
       </section>
-    </>
-  );
+        </div>
+    );
 }

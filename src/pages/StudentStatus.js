@@ -72,30 +72,30 @@ const StudentStatus = () => {
   } = useDisclosure();
 
   // Authentication
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = (localStorage.getItem("role") || "").toLowerCase();
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   const role = (localStorage.getItem("role") || "").toLowerCase();
 
-    if (!token || role !== "principal") {
-      router.push("/StaffLogin");
-      return;
-    }
+  //   if (!token || role !== "principal") {
+  //     router.push("/StaffLogin");
+  //     return;
+  //   }
 
-    axios
-      .get("http://localhost:9500/staff/getDashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        if (!response.data.status) {
-          router.push("/StaffLogin");
-        }
-      })
-      .catch(() => {
-        router.push("/StaffLogin");
-      });
-  }, []);
+  //   axios
+  //     .get("http://localhost:9500/staff/getDashboard", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       if (!response.data.status) {
+  //         router.push("/StaffLogin");
+  //       }
+  //     })
+  //     .catch(() => {
+  //       router.push("/StaffLogin");
+  //     });
+  // }, []);
 
   // Fetch Records
 
@@ -108,6 +108,7 @@ const StudentStatus = () => {
       );
 
       if (data.status) {
+        // console.log(data.students)
         setDisciplinary(data.students || []);
         setFilteredStudents(data.students || []);
       }

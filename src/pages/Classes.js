@@ -513,6 +513,7 @@ const ClassStudentTabs = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      
       {/* Modal for editing Class */}
       <Modal isOpen={isUpdateModalOpen} onClose={onUpdateModalClose} size="xl">
         <ModalOverlay />

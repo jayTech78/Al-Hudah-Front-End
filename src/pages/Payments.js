@@ -129,7 +129,7 @@ const ClassStudentTabs = () => {
               </div>
               <div className="me-5">
               <Link
-                href={"/MUnCompletedPayment"}
+                href={"/UnCompletePayment"}
                 className="col-8 btn-primary btn mb-1"
               >
                 UnComplete Payments / Approve Payments

@@ -96,7 +96,7 @@ const Layout = ({ children }) => {
             <ChakraLink
               bg={
                 router.pathname === item.href
-                  ? "teal.100"
+                  ? "green.100"
                   : "transparent"
               }
               p={3}
@@ -108,7 +108,7 @@ const Layout = ({ children }) => {
               }
               _hover={{
                 textDecoration: "none",
-                bg: "teal.50",
+                bg: "green.50",
               }}
             >
               {item.label}
@@ -130,7 +130,7 @@ const Layout = ({ children }) => {
 
       <Flex
         as="header"
-        bg="teal.500"
+        bg="green.500"
         p={4}
         justify="space-between"
         align="center"
@@ -147,11 +147,11 @@ const Layout = ({ children }) => {
             icon={<HamburgerIcon />}
             onClick={onOpen}
             aria-label="Open navigation"
-            colorScheme="teal"
+            colorScheme="green"
             bg="white"
-            color="teal.500"
+            color="green.500"
             _hover={{
-              bg: "gray.100",
+              bg: "green.100",
             }}
           />
 
@@ -174,7 +174,7 @@ const Layout = ({ children }) => {
           borderColor="white"
           _hover={{
             bg: "white",
-            color: "teal.500",
+            color: "green.500",
           }}
           onClick={signOut}
         >

@@ -16,7 +16,7 @@ import {
   Spinner,
   Badge,
 } from "@chakra-ui/react";
-import Layout from "@/Components/PrincipalLayout";
+import Layout from "@/Components/ManagerLayout";
 
 export default function ClassDebtorsPage() {
   const router = useRouter();

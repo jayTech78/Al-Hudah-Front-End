@@ -49,6 +49,10 @@ const LandingPageNav = () => {
           <Link href="/Contact" className="nav-link text-white">Contacts</Link>
         </li>
 
+        <li className="nav-item">
+          <Link href="/Gallery" className="nav-link text-white">Gallery</Link>
+        </li>
+
         <li className="nav-item dropdown">
           <button
             className="btn text-white"

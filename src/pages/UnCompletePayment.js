@@ -33,7 +33,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import Layout from "@/Components/ManagerLayout";
+import Layout from "@/Components/BursarLayout";
 import { useRouter } from "next/router";
 
 export default function AttendancePage() {
@@ -89,12 +89,12 @@ export default function AttendancePage() {
 
  
   const gotToClass = (className) => {
-    router.push(`/PClassDebtors/${className}`);
+    router.push(`/Debtors/${className}`);
   };
 
   if (loading) return <Spinner size="xl" />;
 
-  return (
+   return (
     <Layout>
       <Box p={5}>
         <HStack justify="space-between" mb={4}>

@@ -187,7 +187,7 @@ const GenerateBill = () => {
           studentId,
           amount,
           description,
-          items:JSON.stringify(selectedItems)
+          items: JSON.stringify(selectedItems)
         },
       });
     });

@@ -81,7 +81,7 @@ export default function StudentResultFilter() {
           term,
         }
       );
-
+      console.log(data.result)
       if (data.status && data.result) {
         setResult(data.result);
       } else {
@@ -172,84 +172,116 @@ export default function StudentResultFilter() {
         )}
 
         {!loading && result && (
-          <Box mt={8}>
+  <Box mt={8}>
 
-            <Heading size="md" mb={4}>
-              Student Information
-            </Heading>
+    <Heading size="md" mb={4}>
+      Student Information
+    </Heading>
 
-            <Text>
-              <b>Name:</b> {result.studentName}
-            </Text>
+    <Text>
+      <b>Name:</b>{" "}
+      {result.student?.surName} {result.student?.otherNames}
+    </Text>
 
-            <Text>
-              <b>Student ID:</b> {result.studentId}
-            </Text>
+    <Text>
+      <b>Student ID:</b>{" "}
+      {result.student?.studentId}
+    </Text>
 
-            <Text>
-              <b>Class:</b> {result.className}
-            </Text>
+    <Text>
+      <b>Class:</b>{" "}
+      {result.result?.className}
+    </Text>
 
-            <Text>
-              <b>Term:</b> {result.term}
-            </Text>
+    <Text>
+      <b>Term:</b>{" "}
+      {result.result?.term}
+    </Text>
 
-            <Text mb={6}>
-              <b>Session:</b> {result.session}
-            </Text>
+    <Text mb={6}>
+      <b>Session:</b>{" "}
+      {result.result?.session}
+    </Text>
 
-            <Table
-              variant="striped"
-              colorScheme="blue"
-            >
-              <Thead>
-                <Tr>
-                  <Th>Subject</Th>
-                  <Th>1st Test</Th>
-                  <Th>2nd Test</Th>
-                  <Th>Exam</Th>
-                  <Th>Total</Th>
-                  <Th>Grade</Th>
-                  <Th>Remark</Th>
-                </Tr>
-              </Thead>
+    <Table
+      variant="striped"
+      colorScheme="blue"
+    >
+      <Thead>
+        <Tr>
+          <Th>Subject</Th>
+          <Th>1st CA</Th>
+          <Th>2nd CA</Th>
+          <Th>Exam</Th>
+          <Th>Total</Th>
+          <Th>Grade</Th>
+          <Th>Remark</Th>
+        </Tr>
+      </Thead>
 
-              <Tbody>
-                {result.subjects.map((subject, index) => (
-                  <Tr key={index}>
-                    <Td>{subject.subject}</Td>
+      <Tbody>
+        {result?.grades?.map((grade, index) => {
+          const termResult =
+            grade[result.termField];
 
-                    <Td>{subject.firstTest}</Td>
+          return (
+            <Tr key={grade._id || index}>
+              <Td>
+                {grade.subjectId}
+              </Td>
 
-                    <Td>{subject.secondTest}</Td>
+              <Td>
+                {termResult?.firstCa ?? "-"}
+              </Td>
 
-                    <Td>{subject.exam}</Td>
+              <Td>
+                {termResult?.secondCa ?? "-"}
+              </Td>
 
-                    <Td>{subject.total}</Td>
+              <Td>
+                {termResult?.exam ?? "-"}
+              </Td>
 
-                    <Td>{subject.grade}</Td>
+              <Td>
+                {termResult?.totalScore ?? "-"}
+              </Td>
 
-                    <Td>{subject.remark}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+              <Td>
+                {termResult?.grade ?? "-"}
+              </Td>
 
-            <Box mt={6}>
-              <Text>
-                <b>Total Score:</b> {result.totalScore}
-              </Text>
+              <Td>
+                {termResult?.teacherRemark ?? "-"}
+              </Td>
+            </Tr>
+          );
+        })}
+      </Tbody>
+    </Table>
 
-              <Text>
-                <b>Average:</b> {result.average}
-              </Text>
+    <Box mt={6}>
+      <Text>
+        <b>Total Score:</b>{" "}
+        {result.result?.totalScore}
+      </Text>
 
-              <Text>
-                <b>Position:</b> {result.position}
-              </Text>
-            </Box>
-          </Box>
-        )}
+      <Text>
+        <b>Average:</b>{" "}
+        {result.result?.average}
+      </Text>
+
+      <Text>
+        <b>Percentage:</b>{" "}
+        {result.result?.percentage}%
+      </Text>
+
+      <Text>
+        <b>Position:</b>{" "}
+        {result.result?.overallPosition}
+      </Text>
+    </Box>
+  </Box>
+)}
       </Box>
     </Layout>
   );

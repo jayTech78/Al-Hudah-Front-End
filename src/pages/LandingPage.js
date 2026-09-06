@@ -37,16 +37,16 @@ export default function LandingPage() {
       <div className="container">
         <div className="row">
           <div className="col-md-12 col-12 col-lg-6">
-            <div className="p-3 d-flex justify-content-center fst-italic">
+            <div className="p-1 d-flex justify-content-center fst-italic">
               <div className="my-5">
-                <div className="display-6 my-5">Welcome To Al-Hudah Group Of Schools</div>
+                <div className="display-6 my-3">Welcome To Al-Hudah Schools Limited</div>
                 <div className="">
                   A Center of Excellence in Islamic and Academic Education. <br />
                   <br />
-                  At Al-Hudah Group Of Schools, we are committed to nurturing young minds with the light of knowledge and the spirit of faith.
+                  At Al-Hudah Schools Limited, we are committed to nurturing young minds with the light of knowledge and the spirit of faith.
                   Our mission is to empower students with a balanced education that integrates Islamic values with academic excellence, preparing them to thrive in the modern world while remaining grounded in their faith. <br />
                   <br />
-                  Our dedicated team of educators fosters a safe, respectful, and inspiring environment where students can grow spiritually, intellectually, and socially. Through a holistic approach to learning, we aim to cultivate future leaders who embody the principles of Islam—compassion, integrity, and wisdom. <br />
+                  Our dedicated team of educators foster a safe, respectful, and inspiring environment where students can grow spiritually, intellectually, and socially. Through a holistic approach to learning, we aim to cultivate future leaders who embody the principles of Islam—compassion, integrity, and wisdom. <br />
                   <br />
                   We warmly invite you to explore our school and discover how we can help shape your child’s future, insha’Allah.<br></br>
 
@@ -138,6 +138,7 @@ export default function LandingPage() {
 
         </div>
       </div>
+      {/* Testimonial */}
       <section>
         <div className="bg-white">
           <div className="container">
@@ -152,7 +153,7 @@ export default function LandingPage() {
                     </div>
                     <p className="p-4 ">
                   "<br></br>
-                   The College has taught me to take responsibilities that I never thougth I would ever take. One thing I love about Alhudah is 
+                   The College has taught me to take responsibilities that I never thought I would ever take. One thing I love about Alhudah is 
                   "
                     </p>
                   </div>
@@ -209,6 +210,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
       {/* Footer */}
       <section id="Footer">
         <div className="bg-success text-white">

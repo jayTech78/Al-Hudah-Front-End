@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import axios from "axios";
-import ParentSideNav from "@/Components/ParentSideNav";
+import Layout from "@/Components/ParentLayout";
 import NavBar from "@/Components/NavBar";
 import dynamic from "next/dynamic";
 import { Box, Spinner } from "@chakra-ui/react";
@@ -203,12 +203,9 @@ const GetStudents = () => {
   };
 
   return (
-    <div className={style.unscroll}>
-      <NavBar />
-      <div className="row">
+    <Layout  parentId={userId}>
         <div className="">
           <div className="row flex-nowrap">
-            <ParentSideNav parent_Id={userId}/>
             <Box className="col-12 py-3"> 
               <h3 className="text-center">CheckOut</h3>
               <Box p={4}>
@@ -252,8 +249,7 @@ const GetStudents = () => {
             </Box>
           </div>
         </div>
-      </div>
-    </div>
+    </Layout>
   );
 };
 

@@ -15,17 +15,20 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import api from '@/utils/api'
 import TeacherLayout from "@/Components/TeacherLayout";
 
 export default function MarkAttendance() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [attendance, setAttendance] = useState({});
+  const [afternoonAttendance, setAfternoonAttendance] = useState({});
   const toast = useToast();
   const router = useRouter();
   const [error, setError] = useState("");
   const { className, teacherId } = router.query;
   const [isTimeClocked, setIsTimeClocked] = useState(false)
+  const [isAfternoonTimeClocked, setIsAfternoonTimeClocked] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -75,6 +78,10 @@ export default function MarkAttendance() {
   const handleChange = (studentId, status) => {
     setAttendance((prev) => ({ ...prev, [studentId]: status }));
   };
+// afternoon attendance
+const handleAfternoonChange = (studentId, status) => {
+    setAfternoonAttendance((prev) => ({ ...prev, [studentId]: status }));
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,14 +91,23 @@ export default function MarkAttendance() {
       const minutes = now.getMinutes();
 
       if (hours > 12 || (hours === 12 && minutes >= 30)) {
+        setIsAfternoonTimeClocked(false)
         setIsTimeClocked(true); // Attendance is now CLOSED
-      } else {
+      } 
+      else if (hours < 12 || (hours === 12 && minutes <= 30) && hours < 3 || (hours === 3 && minutes <= 30)) 
+      {
         setIsTimeClocked(false); // Attendance is still OPEN
+        setIsAfternoonTimeClocked(true)
+      }
+      else{
+        setIsTimeClocked(true); // Attendance is still OPEN
+        setIsAfternoonTimeClocked(true)
       }
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
+
   const handleSubmit = async () => {
     if (Object.keys(attendance).length === 0) {
       toast({
@@ -112,7 +128,7 @@ export default function MarkAttendance() {
         className: className.toUpperCase(),
         studentId: student.studentId,
         date: today,
-        status: attendance[student.studentId] || "Absent",
+        morningStatus: attendance[student.studentId] || "Absent",
       }));
 
       // console.log("Submitting payload:", payload);
@@ -123,6 +139,42 @@ export default function MarkAttendance() {
       );
 
       toast({ title: "Attendance submitted successfully.", status: "success" });
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast({ title: "Submission failed.", status: "error" });
+    }
+  };
+  const handleAfternoonSubmit = async () => {
+    if (Object.keys(afternoonAttendance).length === 0) {
+      toast({
+        title: "No attendance selected",
+        description: "Please mark attendance for at least one student.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    try {
+      // Always mark attendance for "today"
+      const today = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+
+      const payload = students.map((student) => ({
+        className: className.toUpperCase(),
+        studentId: student.studentId,
+        date: today,
+        afternoonStatus: afternoonAttendance[student.studentId] || "Absent",
+      }));
+
+      console.log("Submitting payload:", payload);
+
+      await axios.post(
+        "http://localhost:9500/attendance/markAttendance",
+        payload
+      );
+
+      toast({ title: "Afternoon Attendance submitted successfully.", status: "success" });
     } catch (error) {
       console.error("Submission error:", error);
       toast({ title: "Submission failed.", status: "error" });
@@ -159,7 +211,8 @@ export default function MarkAttendance() {
                     <Thead>
                       <Tr>
                         <Th>Name</Th>
-                        <Th>Status</Th>
+                        <Th>Morning</Th>
+                        <Th>Afternoon</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -169,6 +222,7 @@ export default function MarkAttendance() {
                             <Td>
                               {student.surName} {student.otherNames}
                             </Td>
+                            {/* //Morning Attendances */}
                             <Td>
                               <Box display="flex" gap="6">
                                 <label>
@@ -202,6 +256,40 @@ export default function MarkAttendance() {
                                 </label>
                               </Box>
                             </Td>
+                            {/* //Afternoon Attendance */}
+                            <Td>
+                              <Box display="flex" gap="6">
+                                <label>
+                                  <input
+                                    type="radio"
+                                    name={`afternoonAttendance-${student.studentId}`}
+                                    value="Present"
+                                    checked={
+                                      afternoonAttendance[student.studentId] ===
+                                      "Present"
+                                    }
+                                    onChange={() =>
+                                      handleAfternoonChange(student.studentId, "Present")
+                                    }
+                                  />{" "}
+                                  Present
+                                </label>
+                                <label>
+                                  <input
+                                    type="radio"
+                                    name={`afternoonAttendance-${student.studentId}`}
+                                    value="Absent"
+                                    checked={
+                                      afternoonAttendance[student.studentId] === "Absent"
+                                    }
+                                    onChange={() =>
+                                      handleAfternoonChange(student.studentId, "Absent")
+                                    }
+                                  />{" "}
+                                  Absent
+                                </label>
+                              </Box>
+                            </Td>
                           </Tr>
                         ))
                       ) : (
@@ -219,7 +307,7 @@ export default function MarkAttendance() {
                       if (isTimeClocked) {
                         toast({
                           title: "Attendance Closed",
-                          description: "Attendance cannot be submitted after 12:30 PM.",
+                          description: "Morning Attendance cannot be submitted after 12:30 PM.",
                           status: "error",
                         });
                         return;
@@ -229,6 +317,25 @@ export default function MarkAttendance() {
                     }}
                   >
                     Submit Attendance
+                  </Button>
+                  <Button
+                    mt={6}
+                    ms={2}
+                    colorScheme="blue"
+                    onClick={() => {
+                      if (isAfternoonTimeClocked) {
+                        toast({
+                          title: "Attendance Closed",
+                          description: "Afternoon Attendance cannot be submitted after 12:30 PM.",
+                          status: "error",
+                        });
+                        return;
+                      }
+
+                      handleAfternoonSubmit();
+                    }}
+                  >
+                    Submit Afternoon Attendance
                   </Button>
                 </div>
               </Box>

@@ -35,57 +35,56 @@ const Layout = ({ children }) => {
   };
 
   const linkItems = [
-    { href: '/GetBooks', label: 'Books/Fees' },
-    { href: '/Payments', label: 'Payment' },
-    { href: '/Audit', label: 'Audit' },
-    { href: '/Finances', label: 'Finances' },
+    { href: '/GetBooks', label: 'Books/Fees', },
+    { href: '/Payments', label: 'Payment', },
+    { href: '/Audit', label: 'Audit', },
+    { href: '/Finances', label: 'Finances', },
+    { href: '/Incomes', label: 'Incomes',},
+    { href: '/Expenses', label: 'Expenses',},
+    { href: '/Cashbook', label: 'Cashbook',}
   ];
 
   // Sidebar content
   const SidebarContent = () => (
-    <Box
-      bg="gray.100"
-      width="100%"
-      height="100%"
-      p={4}
-      overflow="hidden"
+  <Box
+    bg="gray.100"
+    width="100%"
+    height="100%"
+    p={2}
+    overflow="hidden"
+  >
+    <VStack
+      spacing={2}
+      align="stretch"
     >
-      <VStack
-        spacing={2}
-        align="stretch"
-      >
-        {linkItems.map((item) => (
-          <NextLink
-            href={item.href}
-            passHref
-            legacyBehavior
-            key={item.href}
-          >
-            <ChakraLink
-              bg={
-                router.pathname === item.href
-                  ? "teal.100"
-                  : "transparent"
-              }
-              p={3}
-              borderRadius="md"
-              fontWeight={
-                router.pathname === item.href
-                  ? "bold"
-                  : "normal"
-              }
-              _hover={{
-                textDecoration: "none",
-                bg: "teal.50",
-              }}
-            >
-              {item.label}
-            </ChakraLink>
-          </NextLink>
-        ))}
-      </VStack>
-    </Box>
-  );
+      {linkItems.map((item) => (
+        <ChakraLink
+          as={NextLink}
+          href={item.href}
+          key={item.href}
+          bg={
+            router.pathname === item.href
+              ? "green.100"
+              : "transparent"
+          }
+          p={3}
+          borderRadius="md"
+          fontWeight={
+            router.pathname === item.href
+              ? "bold"
+              : "normal"
+          }
+          _hover={{
+            textDecoration: "none",
+            bg: "green.50",
+          }}
+        >
+          {item.label}
+        </ChakraLink>
+      ))}
+    </VStack>
+  </Box>
+);
 
   return (
     <Flex
@@ -98,7 +97,7 @@ const Layout = ({ children }) => {
 
       <Flex
         as="header"
-        bg="teal.500"
+        bg="green.500"
         p={4}
         justify="space-between"
         align="center"
@@ -115,9 +114,9 @@ const Layout = ({ children }) => {
             icon={<HamburgerIcon />}
             onClick={onOpen}
             aria-label="Open navigation"
-            colorScheme="teal"
+            colorScheme="green"
             bg="white"
-            color="teal.500"
+            color="green.500"
             _hover={{
               bg: "gray.100",
             }}
@@ -142,7 +141,7 @@ const Layout = ({ children }) => {
           borderColor="white"
           _hover={{
             bg: "white",
-            color: "teal.500",
+            color: "green.500",
           }}
           onClick={signOut}
         >

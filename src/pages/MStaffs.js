@@ -403,7 +403,7 @@ const GetStaffs = () => {
       <Box size="lg" maxW="2000px" ratio={15 / 5}>
         <Box p={4}>
           <div className="mx-auto rounded-3">
-            <h2 className="text-center ">STAFFS</h2>
+            <h2 className="text-center ">STAFF</h2>
             <div className="d-flex mb-1 justify-content-between align">
 
               {/* Add Staff */}

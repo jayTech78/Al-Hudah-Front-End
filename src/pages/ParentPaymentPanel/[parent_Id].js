@@ -27,6 +27,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import ParentLayout from "@/Components/ParentLayout";
+import Swal from 'sweetalert2'
 
 const GetParentFees = () => {
   const router = useRouter();
@@ -39,6 +40,11 @@ const GetParentFees = () => {
   const [students, setStudents] = useState([]);
   const [admissionFee, setAdmissionFee] = useState(null);
 
+  const [displayMessage, setDisplayMessage] = useState('')
+  const [books, setBooks] = useState([]);
+  const [fees, setFees] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([])
+  const [selectedStudent, setSelectedStudent] = useState(null)
   const [partPaymentAmount, setPartPaymentAmount] = useState("");
   const [bookPartPaymentAmount, setBookPartPaymentAmount] = useState("");
 
@@ -46,11 +52,12 @@ const GetParentFees = () => {
     const fetchFees = async () => {
       // console.log(router.query);
       const { parent_Id } = router.query;
+      setId(router.query)
 
       if (!parent_Id) return;
 
       setId(parent_Id);
-      console.log(parent_Id);
+      // console.log(parent_Id);
       setLoading(true);
 
       try {
@@ -88,6 +95,47 @@ const GetParentFees = () => {
   }, [router.query]);
 
   useEffect(() => {
+    const fetchFees = async () => {
+      try {
+        const response = await axios.get('http://localhost:9500/fees/getFees')
+        // console.log(response.data.fees)
+        setFees(response.data.fees);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch fees.");
+      }
+    }
+    fetchFees()
+  }, [])
+  useEffect(() => {
+    const fetchBooks = async () => {
+      // console.log(router.query);
+
+      try {
+        const response = await axios.get(
+          "http://localhost:9500/book/getBooks"
+        );
+
+        if (response.data.status) {
+
+          // console.log(student[0].studentId)
+          setBooks(response.data.books);
+
+        } else {
+          setError("No books found.");
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch books.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     if (!token || role !== "parent") {
@@ -112,22 +160,87 @@ const GetParentFees = () => {
       .catch(() => router.push("/Login"));
   }, [router]);
 
-  // Checkout handlers
-  const goToCheckout = (fee, studentId) => {
-    console.log(studentId)
-    if (id && fee && studentId) {
-      router.push(
-        `/CheckOut/${id}?paidFor=${fee.fee}&price=${fee.price}&studentId=${studentId}`
+  const handleCheck = (item) => {
+
+    setSelectedItems((prev) => {
+
+      const exists = prev.find(
+        (i) => i.name === item.name
       );
-    }
+
+      if (exists) {
+
+        return prev.filter(
+          (i) => i.name !== item.name
+        );
+
+      }
+
+      return [...prev, item];
+
+    });
+
   };
 
-  const bookPaymentCheckout = (book, studentId) => {
-    if (id && book.name && studentId) {
-      router.push(
-        `/CheckOut/${id}?paidFor=${book.name}&price=${book.price}&studentId=${studentId}`
-      );
+  // Proceed to checkout
+  const goToCheckout = () => {
+    if (!selectedStudent) {
+      setDisplayMessage("Empty Student ID");
+      return;
     }
+
+    if (selectedItems.length === 0) {
+      setDisplayMessage("Please select at least one fee or book.");
+      return;
+    }
+
+    setDisplayMessage("");
+
+    // Parent details
+    const parentId = selectedStudent.parentId;
+    const parentName = selectedStudent.parentName || "";
+    const parentEmail = selectedStudent.parentEmail || "";
+
+    // Student details
+    const studentName = `${selectedStudent.surName} ${selectedStudent.otherNames}`;
+    const studentId = selectedStudent.studentId;
+
+    const amount = selectedItems.reduce(
+      (sum, item) => sum + Number(item.price),
+      0
+    );
+
+    const description = selectedItems
+      .map(item => item.name)
+      .join(", ");
+
+    Swal.fire(
+      "Proceeding to Checkout",
+      `Student: ${studentName}`,
+      "success"
+    ).then(() => {
+      // console.log(id,
+      //     studentName,
+      //     parentName,
+      //     parentEmail,
+      //     studentId,
+      //     amount,
+      //     description,
+      //     JSON.stringify(selectedItems))
+      router.push({
+        pathname: `/CheckOut/${id}`,
+        query: {
+          id,
+          studentName,
+          parentName,
+          parentEmail,
+          studentId,
+          amount,
+          description,
+          items: JSON.stringify(selectedItems)
+        },
+      });
+    });
   };
 
   const handlePartPayment = (studentId) => {
@@ -217,12 +330,13 @@ const GetParentFees = () => {
                             <Accordion className="border" key={student.studentId} allowToggle >
                               <AccordionItem>
                                 <h2>
-                                  <AccordionButton>
+                                  <AccordionButton onClick={() => setSelectedStudent(student)}>
                                     <Box
                                       as="span"
                                       flex="1"
                                       textAlign="left"
                                       className="text-primary border-bottom"
+
                                     >
                                       {student.surName} {student.otherNames}
                                     </Box>
@@ -246,9 +360,44 @@ const GetParentFees = () => {
                                       <Tab>Books</Tab>
                                     </TabList>
                                     <TabPanels>
+
                                       {/* Fees Tab */}
                                       <TabPanel>
-                                        {student.fees?.length > 0 ? (
+
+                                        {
+                                          fees.map((fee) => (
+                                            <div
+                                              key={fee._id}
+                                              className="form-check"
+                                            >
+
+                                              <input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                checked={
+                                                  selectedItems.some(
+                                                    i => i.name === fee.fee
+                                                  )
+                                                }
+                                                onChange={() =>
+                                                  handleCheck({
+                                                    name: fee.fee,
+                                                    price: fee.price,
+                                                    type: "Fee"
+                                                  })
+                                                }
+                                              />
+
+                                              <label className="form-check-label">
+                                                {fee.fee}
+                                                (₦{fee.price})
+                                              </label>
+
+                                            </div>
+
+                                          ))
+                                        }
+                                        {/* {student.fees?.length > 0 ? (
                                           <TableContainer>
                                             <Table
                                               variant="striped"
@@ -261,6 +410,7 @@ const GetParentFees = () => {
                                                   <Th>Action</Th>
                                                 </Tr>
                                               </Thead>
+                                              
                                               <Tbody>
                                                 {student.fees.map((fee, i) => (
                                                   <Tr key={i}>
@@ -286,8 +436,17 @@ const GetParentFees = () => {
                                           </TableContainer>
                                         ) : (
                                           <p>No fees available.</p>
-                                        )}
+                                        )} */}
 
+                                        <div className="mb-3 p-1">
+                                          <button
+                                            className="btn btn-success form-control"
+                                            onClick={goToCheckout}
+                                          // disabled={paymentCompleted}
+                                          >
+                                            Continue To Checkout
+                                          </button>
+                                        </div>
                                         {/* Part payment input */}
                                         <div className="col-10 d-block p-2 mx-auto">
                                           <label>Part Payment:</label>
@@ -303,6 +462,7 @@ const GetParentFees = () => {
                                                   )
                                                 }
                                               />
+
                                               <div className="col-4">
                                                 <Button
                                                   className="btn btn-success"
@@ -322,45 +482,39 @@ const GetParentFees = () => {
 
                                       {/* Books Tab */}
                                       <TabPanel>
-                                        {student.books?.length > 0 ? (
-                                          <TableContainer>
-                                            <Table
-                                              variant="striped"
-                                              colorScheme="teal"
+                                        {
+                                          books.map((book) => (
+                                            <div
+                                              key={book._id}
+                                              className="form-check"
                                             >
-                                              <Thead>
-                                                <Tr>
-                                                  <Th>Book</Th>
-                                                  <Th>Price</Th>
-                                                  <Th>Action</Th>
-                                                </Tr>
-                                              </Thead>
-                                              <Tbody>
-                                                {student.books.map((book, i) => (
-                                                  <Tr key={i}>
-                                                    <Td>{book.name}</Td>
-                                                    <Td>{book.price}</Td>
-                                                    <Td>
-                                                      <Button
-                                                        onClick={() =>
-                                                          bookPaymentCheckout(
-                                                            book,
-                                                            student.studentId
-                                                          )
-                                                        }
-                                                        className="btn btn-sm btn-success"
-                                                      >
-                                                        Pay
-                                                      </Button>
-                                                    </Td>
-                                                  </Tr>
-                                                ))}
-                                              </Tbody>
-                                            </Table>
-                                          </TableContainer>
-                                        ) : (
-                                          <p>No books available.</p>
-                                        )}
+
+                                              <input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                checked={
+                                                  selectedItems.some(
+                                                    i => i.name === book.name
+                                                  )
+                                                }
+                                                onChange={() =>
+                                                  handleCheck({
+                                                    name: book.name,
+                                                    price: book.price,
+                                                    type: "Book"
+                                                  })
+                                                }
+                                              />
+
+                                              <label className="form-check-label">
+                                                {book.name}
+                                                (₦{book.price})
+                                              </label>
+
+                                            </div>
+
+                                          ))
+                                        }
 
                                         {/* Part payment input */}
                                         <div className="col-10 p-2 mx-auto">
@@ -377,6 +531,15 @@ const GetParentFees = () => {
                                                   )
                                                 }
                                               />
+                                            </div>
+                                            <div className="mb-3 p-1">
+                                              <button
+                                                className="btn btn-success form-control"
+                                                onClick={goToCheckout}
+                                              // disabled={paymentCompleted}
+                                              >
+                                                Continue To Checkout
+                                              </button>
                                             </div>
                                             <div className="col-4">
                                               <Button
