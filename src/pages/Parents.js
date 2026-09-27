@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/ManagerLayout";
 import {
   Button,
@@ -70,30 +70,30 @@ const GetParents = () => {
   } = useDisclosure();
   
   // authorization
-   useEffect(() => {
-          const token = localStorage.getItem("token");
-          const role = (localStorage.getItem("role") || "").toLowerCase();
+  //  useEffect(() => {
+  //         const token = localStorage.getItem("token");
+  //         const role = (localStorage.getItem("role") || "").toLowerCase();
 
-          if (!token || (role !== "manager")) {
-            router.push("/StaffLogin");
-            return;
-          }
+  //         if (!token || (role !== "manager")) {
+  //           router.push("/StaffLogin");
+  //           return;
+  //         }
 
-          axios
-            .get("http://localhost:9500/staff/getDashboard", {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-                Accept: "application/json",
-              },
-            })
-            .then((response) => {
-              if (!response.data.status) {
-                router.push("/StaffLogin");
-              }
-            })
-            .catch(() => router.push("/StaffLogin"));
-        }, [router]);
+  //         api
+  //           .get("/staff/getDashboard", {
+  //             headers: {
+  //               Authorization: `Bearer ${token}`,
+  //               "Content-Type": "application/json",
+  //               Accept: "application/json",
+  //             },
+  //           })
+  //           .then((response) => {
+  //             if (!response.data.status) {
+  //               router.push("/StaffLogin");
+  //             }
+  //           })
+  //           .catch(() => router.push("/StaffLogin"));
+  //       }, [router]);
 
   // Fetch parents + students on load
   useEffect(() => {
@@ -101,8 +101,8 @@ const GetParents = () => {
       setLoading(true);
       try {
         const [parentsRes, studentsRes] = await Promise.all([
-          axios.get("http://localhost:9500/parent/getParents"),
-          axios.get("http://localhost:9500/student/getStudents"),
+          api.get("/parent/getParents"),
+          api.get("/student/getStudents"),
         ]);
         SetParents(parentsRes.data?.parents || []);
         setAllStudents(studentsRes.data?.students || []);
@@ -167,7 +167,7 @@ const GetParents = () => {
     validationSchema: addValidationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const response = await axios.post("http://localhost:9500/parent/parentSignUp", values);
+        const response = await api.post("/parent/parentSignUp", values);
         if (response.data.status) {
           Swal.fire("Success", response.data.message, "success");
           resetForm();
@@ -210,7 +210,7 @@ const GetParents = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(`http://localhost:9500/parent/deleteParent/`, {
+          const response = await api.post(`/parent/deleteParent/`, {
             parentId,
           });
           if (response.data.status) {
@@ -270,7 +270,7 @@ const GetParents = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(`http://localhost:9500/parent/updateParent/`, {
+        const response = await api.post(`/parent/updateParent/`, {
           ...values,
           parentId: selectedParent.parentId,
         });

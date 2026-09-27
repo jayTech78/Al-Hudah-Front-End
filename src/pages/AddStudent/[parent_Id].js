@@ -24,11 +24,8 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Layout from "@/Components/ParentLayout";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import style from "../../styles/SignUp.module.css";
-import Swal from "sweetalert2";
 
 export default function AddStudent() {
   const router = useRouter();
@@ -102,7 +99,7 @@ export default function AddStudent() {
           `/AdmissionCheckout?id=${id}&paidFor=${paidFor}&price=${price}&studentName=${studentName}`,
         );
 
-        // const response = await axios.post("http://localhost:9500/student/addStudent",
+        // const response = await api.post("/student/addStudent",
         //   { ...values, parentId }
         // );
         // if (response.data.status) {
@@ -351,7 +348,7 @@ export default function AddStudent() {
                     </div>
                     <div className="col-4 p-4">
                       <label htmlFor="" className="form-label">
-                        Religion
+                        Tribe
                       </label>
                       <select
                         type="text"

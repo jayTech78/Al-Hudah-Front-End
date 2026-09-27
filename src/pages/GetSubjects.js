@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/PrincipalLayout";
 import {
   Button,
@@ -43,8 +43,8 @@ const GetBooks = () => {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //         "Content-Type": "application/json",
@@ -64,8 +64,8 @@ const GetBooks = () => {
     const fetchSubjects = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/subject/getSubjects"
+        const { data: response } = await api.get(
+          "/subject/getSubjects"
         );
         setSubjects(response.subjects);
         // console.log(response.subjects);
@@ -87,8 +87,8 @@ const GetBooks = () => {
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/subject/addSubject",
+        const response = await api.post(
+          "/subject/addSubject",
           values
         );
         if (response.data.status) {
@@ -131,8 +131,8 @@ const GetBooks = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          `http://localhost:9500/subject/updateSubject/`,
+        const response = await api.post(
+          `/subject/updateSubject/`,
           { ...values, subjectId: selectedSubject.subjectId }
         );
 
@@ -170,8 +170,8 @@ const GetBooks = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
-            "http://localhost:9500/subject/deleteSubject",
+          const response = await api.post(
+            "/subject/deleteSubject",
             { subjectId }
           );
           if (response.data.status) {

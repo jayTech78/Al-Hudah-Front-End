@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {useRouter} from "next/router";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Box,
   Button,
@@ -42,7 +42,7 @@ const GetFinances = () => {
 
   const fetchFinances = async () => {
     try {
-      const { data } = await axios.get("http://localhost:9500/finance/getFinances");
+      const { data } = await api.get("/finance/getFinances");
       if (data.status) {
         setFinances(data.finances);
         console.log(data.finances)
@@ -63,8 +63,8 @@ const GetFinances = () => {
   //       return;
   //     }
   
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -82,8 +82,8 @@ const GetFinances = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:9500/finance/getAccounts"
+        const { data } = await api.get(
+          "/finance/getAccounts"
         );
         if (data.status) {
           setCurrentBalance(data.currentBalance);
@@ -103,8 +103,8 @@ const GetFinances = () => {
   useEffect(() => {
     const fetchFinances = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:9500/finance/getFinances"
+        const { data } = await api.get(
+          "/finance/getFinances"
         );
         if (data.status) {
           console.log(data.finances);
@@ -132,7 +132,7 @@ const GetFinances = () => {
     }),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const response = await axios.post("http://localhost:9500/finance/addFinance", values);
+        const response = await api.post("/finance/addFinance", values);
         if (response.data.status) {
           toast({ title: "Finance added", status: "success" });
           fetchFinances();
@@ -161,7 +161,7 @@ const GetFinances = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post("http://localhost:9500/finance/updateFinance", {
+        const response = await api.post("/finance/updateFinance", {
           ...values,
           _id: selectedFinance._id,
         });

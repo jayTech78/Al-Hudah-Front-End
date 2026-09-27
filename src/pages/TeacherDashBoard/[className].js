@@ -25,11 +25,9 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import TeacherSideNav from "@/Components/TeacherSideNav";
 import EventCalendar from "@/Components/Calendar";
-import ManagerNavBar from "@/Components/ParentNavBar";
-import axios from "axios";
 import TeacherLayout from "@/Components/TeacherLayout";
+import api from '@/utils/api'
 
 export default function teacherDashboard() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -46,16 +44,19 @@ export default function teacherDashboard() {
     console.log(className)
     setLoading(true);
     try {
-      const { data } = await axios.post(
-        `http://localhost:9500/class/classInfo/${className}`
+      const { data } = await api.post(
+        `/class/classInfo/${className}`
       );
+      // const { data } = await api.post(
+      //   `/class/classInfo/${className}`
+      // );
       const foundClass = data.foundClass;
 
       if (!foundClass) {
         setError("foundClass not found");
         return;
       }
-      console.log(data)
+      // console.log(data)
       
       setStudents(data?.students || []);
       // setClassInfo(response.classDetails?.[0])
@@ -74,12 +75,12 @@ export default function teacherDashboard() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     if (!token || role !== "Teacher") {
-      router.push("/Login");
+      router.push("/StaffLogin");
       return;
     }
 
-    axios
-      .get("http://localhost:9500/staff/getDashboard", {
+    api
+      .get("/staff/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

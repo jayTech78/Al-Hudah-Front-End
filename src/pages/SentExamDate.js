@@ -11,7 +11,7 @@ import {
   TableContainer,
   Button,
 } from "@chakra-ui/react";
-import axios from "axios";
+import api from "@/utils/api";
 import { useRouter } from "next/router";
 
 const SentExamDate = () => {
@@ -24,8 +24,8 @@ const SentExamDate = () => {
     const fetchSentExamDate = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/student/sentExaminationDate"
+        const { data: response } = await api.get(
+          "/student/sentExaminationDate"
         );
         console.log("API Response:", response);
         setSentExamDate(response.data || []); // <-- CORRECT DATA SET
@@ -46,8 +46,8 @@ const SentExamDate = () => {
           return;
         }
     
-        axios
-          .get("http://localhost:9500/staff/getDashboard", {
+        api
+          .get("/staff/getDashboard", {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",

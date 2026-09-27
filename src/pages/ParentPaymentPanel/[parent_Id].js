@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import style from "../../styles/Home.module.css";
 import { useRouter } from "next/router";
-import axios from "axios";
-import ParentSideNav from "@/Components/ParentSideNav";
-import NavBar from "@/Components/NavBar";
+import api from "@/utils/api";
 import {
   Table,
   Thead,
@@ -27,7 +24,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import ParentLayout from "@/Components/ParentLayout";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 const GetParentFees = () => {
   const router = useRouter();
@@ -40,11 +37,11 @@ const GetParentFees = () => {
   const [students, setStudents] = useState([]);
   const [admissionFee, setAdmissionFee] = useState(null);
 
-  const [displayMessage, setDisplayMessage] = useState('')
+  const [displayMessage, setDisplayMessage] = useState("");
   const [books, setBooks] = useState([]);
   const [fees, setFees] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([])
-  const [selectedStudent, setSelectedStudent] = useState(null)
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [partPaymentAmount, setPartPaymentAmount] = useState("");
   const [bookPartPaymentAmount, setBookPartPaymentAmount] = useState("");
 
@@ -52,7 +49,7 @@ const GetParentFees = () => {
     const fetchFees = async () => {
       // console.log(router.query);
       const { parent_Id } = router.query;
-      setId(router.query)
+      setId(router.query);
 
       if (!parent_Id) return;
 
@@ -61,17 +58,16 @@ const GetParentFees = () => {
       setLoading(true);
 
       try {
-        const response = await axios.post(
-          "http://localhost:9500/student/getParentPayments",
-          { parent_Id }
+        const response = await api.post("/student/getParentPayments",
+          { parent_Id },
         );
 
         if (response.data.status) {
           const admitted = response.data.students.filter(
-            (s) => s.type === "admitted"
+            (s) => s.type === "admitted",
           );
           const notAdmitted = response.data.students.filter(
-            (s) => s.type === "notAdmitted"
+            (s) => s.type === "notAdmitted",
           );
 
           // console.log(student[0].studentId)
@@ -97,30 +93,26 @@ const GetParentFees = () => {
   useEffect(() => {
     const fetchFees = async () => {
       try {
-        const response = await axios.get('http://localhost:9500/fees/getFees')
+        const response = await api.get("/fees/getFees");
         // console.log(response.data.fees)
         setFees(response.data.fees);
       } catch (error) {
         console.error(error);
         setError("Failed to fetch fees.");
       }
-    }
-    fetchFees()
-  }, [])
+    };
+    fetchFees();
+  }, []);
   useEffect(() => {
     const fetchBooks = async () => {
       // console.log(router.query);
 
       try {
-        const response = await axios.get(
-          "http://localhost:9500/book/getBooks"
-        );
+        const response = await api.get("/book/getBooks");
 
         if (response.data.status) {
-
           // console.log(student[0].studentId)
           setBooks(response.data.books);
-
         } else {
           setError("No books found.");
         }
@@ -143,8 +135,8 @@ const GetParentFees = () => {
       return;
     }
 
-    axios
-      .get("http://localhost:9500/parent/getDashboard", {
+    api
+      .get("/parent/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -161,25 +153,15 @@ const GetParentFees = () => {
   }, [router]);
 
   const handleCheck = (item) => {
-
     setSelectedItems((prev) => {
-
-      const exists = prev.find(
-        (i) => i.name === item.name
-      );
+      const exists = prev.find((i) => i.name === item.name);
 
       if (exists) {
-
-        return prev.filter(
-          (i) => i.name !== item.name
-        );
-
+        return prev.filter((i) => i.name !== item.name);
       }
 
       return [...prev, item];
-
     });
-
   };
 
   // Proceed to checkout
@@ -207,17 +189,15 @@ const GetParentFees = () => {
 
     const amount = selectedItems.reduce(
       (sum, item) => sum + Number(item.price),
-      0
+      0,
     );
 
-    const description = selectedItems
-      .map(item => item.name)
-      .join(", ");
+    const description = selectedItems.map((item) => item.name).join(", ");
 
     Swal.fire(
       "Proceeding to Checkout",
       `Student: ${studentName}`,
-      "success"
+      "success",
     ).then(() => {
       // console.log(id,
       //     studentName,
@@ -237,7 +217,7 @@ const GetParentFees = () => {
           studentId,
           amount,
           description,
-          items: JSON.stringify(selectedItems)
+          items: JSON.stringify(selectedItems),
         },
       });
     });
@@ -251,7 +231,7 @@ const GetParentFees = () => {
 
     if (id && partPaymentAmount && studentId) {
       router.push(
-        `/CheckOut/${id}?paidFor=${description}&price=${partPaymentAmount}&studentId=${studentId}`
+        `/CheckOut/${id}?paidFor=${description}&price=${partPaymentAmount}&studentId=${studentId}`,
       );
     }
   };
@@ -260,25 +240,25 @@ const GetParentFees = () => {
     const description = "Part Payment For Books";
     if (id && bookPartPaymentAmount && studentId) {
       router.push(
-        `/CheckOut/${id}?paidFor=${description}&price=${bookPartPaymentAmount}&studentId=${studentId}`
+        `/CheckOut/${id}?paidFor=${description}&price=${bookPartPaymentAmount}&studentId=${studentId}`,
       );
     }
   };
 
   return (
-
     <ParentLayout parentId={id}>
-
       <div style={{ height: "100vh", overflow: "hidden" }}>
         <div>
-          <div >
+          <div>
             <div className="flex-nowrap h-100">
               <Box
                 className=""
                 h="calc(100vh - 70px)" // subtract your navbar height
                 overflowY="auto"
                 p={4}
-              >              <Box p={4}>
+              >
+                {" "}
+                <Box p={4}>
                   {loading ? (
                     <Spinner size="xl" />
                   ) : error ? (
@@ -327,16 +307,21 @@ const GetParentFees = () => {
                         ) : students.length > 0 ? (
                           /* Case 2: Admitted students */
                           students.map((student) => (
-                            <Accordion className="border" key={student.studentId} allowToggle >
+                            <Accordion
+                              className="border"
+                              key={student.studentId}
+                              allowToggle
+                            >
                               <AccordionItem>
                                 <h2>
-                                  <AccordionButton onClick={() => setSelectedStudent(student)}>
+                                  <AccordionButton
+                                    onClick={() => setSelectedStudent(student)}
+                                  >
                                     <Box
                                       as="span"
                                       flex="1"
                                       textAlign="left"
                                       className="text-primary border-bottom"
-
                                     >
                                       {student.surName} {student.otherNames}
                                     </Box>
@@ -350,53 +335,47 @@ const GetParentFees = () => {
                                       : student.outstanding === 0
                                         ? "All payments cleared 🎉"
                                         : `Overpaid: ${Math.abs(
-                                          student.outstanding
-                                        )}`}
+                                            student.outstanding,
+                                          )}`}
                                   </div>
 
-                                  <Tabs variant="soft-rounded" colorScheme="green">
+                                  <Tabs
+                                    variant="soft-rounded"
+                                    colorScheme="green"
+                                  >
                                     <TabList>
                                       <Tab>Fees</Tab>
                                       <Tab>Books</Tab>
                                     </TabList>
                                     <TabPanels>
-
                                       {/* Fees Tab */}
                                       <TabPanel>
+                                        {fees.map((fee) => (
+                                          <div
+                                            key={fee._id}
+                                            className="form-check"
+                                          >
+                                            <input
+                                              type="checkbox"
+                                              className="form-check-input"
+                                              checked={selectedItems.some(
+                                                (i) => i.name === fee.fee,
+                                              )}
+                                              onChange={() =>
+                                                handleCheck({
+                                                  name: fee.fee,
+                                                  price: fee.price,
+                                                  type: "Fee",
+                                                })
+                                              }
+                                            />
 
-                                        {
-                                          fees.map((fee) => (
-                                            <div
-                                              key={fee._id}
-                                              className="form-check"
-                                            >
-
-                                              <input
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                checked={
-                                                  selectedItems.some(
-                                                    i => i.name === fee.fee
-                                                  )
-                                                }
-                                                onChange={() =>
-                                                  handleCheck({
-                                                    name: fee.fee,
-                                                    price: fee.price,
-                                                    type: "Fee"
-                                                  })
-                                                }
-                                              />
-
-                                              <label className="form-check-label">
-                                                {fee.fee}
-                                                (₦{fee.price})
-                                              </label>
-
-                                            </div>
-
-                                          ))
-                                        }
+                                            <label className="form-check-label">
+                                              {fee.fee}
+                                              (₦{fee.price})
+                                            </label>
+                                          </div>
+                                        ))}
                                         {/* {student.fees?.length > 0 ? (
                                           <TableContainer>
                                             <Table
@@ -442,7 +421,7 @@ const GetParentFees = () => {
                                           <button
                                             className="btn btn-success form-control"
                                             onClick={goToCheckout}
-                                          // disabled={paymentCompleted}
+                                            // disabled={paymentCompleted}
                                           >
                                             Continue To Checkout
                                           </button>
@@ -458,7 +437,7 @@ const GetParentFees = () => {
                                                 placeholder="Enter amount"
                                                 onChange={(e) =>
                                                   setPartPaymentAmount(
-                                                    e.target.value
+                                                    e.target.value,
                                                   )
                                                 }
                                               />
@@ -468,7 +447,7 @@ const GetParentFees = () => {
                                                   className="btn btn-success"
                                                   onClick={() =>
                                                     handlePartPayment(
-                                                      student.studentId
+                                                      student.studentId,
                                                     )
                                                   }
                                                 >
@@ -482,39 +461,32 @@ const GetParentFees = () => {
 
                                       {/* Books Tab */}
                                       <TabPanel>
-                                        {
-                                          books.map((book) => (
-                                            <div
-                                              key={book._id}
-                                              className="form-check"
-                                            >
+                                        {books.map((book) => (
+                                          <div
+                                            key={book._id}
+                                            className="form-check"
+                                          >
+                                            <input
+                                              type="checkbox"
+                                              className="form-check-input"
+                                              checked={selectedItems.some(
+                                                (i) => i.name === book.name,
+                                              )}
+                                              onChange={() =>
+                                                handleCheck({
+                                                  name: book.name,
+                                                  price: book.price,
+                                                  type: "Book",
+                                                })
+                                              }
+                                            />
 
-                                              <input
-                                                type="checkbox"
-                                                className="form-check-input"
-                                                checked={
-                                                  selectedItems.some(
-                                                    i => i.name === book.name
-                                                  )
-                                                }
-                                                onChange={() =>
-                                                  handleCheck({
-                                                    name: book.name,
-                                                    price: book.price,
-                                                    type: "Book"
-                                                  })
-                                                }
-                                              />
-
-                                              <label className="form-check-label">
-                                                {book.name}
-                                                (₦{book.price})
-                                              </label>
-
-                                            </div>
-
-                                          ))
-                                        }
+                                            <label className="form-check-label">
+                                              {book.name}
+                                              (₦{book.price})
+                                            </label>
+                                          </div>
+                                        ))}
 
                                         {/* Part payment input */}
                                         <div className="col-10 p-2 mx-auto">
@@ -527,7 +499,7 @@ const GetParentFees = () => {
                                                 placeholder="Enter amount"
                                                 onChange={(e) =>
                                                   setBookPartPaymentAmount(
-                                                    e.target.value
+                                                    e.target.value,
                                                   )
                                                 }
                                               />
@@ -536,7 +508,7 @@ const GetParentFees = () => {
                                               <button
                                                 className="btn btn-success form-control"
                                                 onClick={goToCheckout}
-                                              // disabled={paymentCompleted}
+                                                // disabled={paymentCompleted}
                                               >
                                                 Continue To Checkout
                                               </button>
@@ -546,7 +518,7 @@ const GetParentFees = () => {
                                                 className="btn btn-success"
                                                 onClick={() =>
                                                   handleBookPartPayment(
-                                                    student.studentId
+                                                    student.studentId,
                                                   )
                                                 }
                                               >

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Swal from "sweetalert2";
@@ -49,8 +49,8 @@ export default function AttendancePage() {
   //       router.push("/StaffLogin");
   //       return;
   //     }
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function AttendancePage() {
     try {
       const [classRes] =
         await Promise.all([
-          axios.get("http://localhost:9500/class/getAllClasses"),
+          api.get("/class/getAllClasses"),
         ]);
 
       let allClasses = classRes.data.classes || [];

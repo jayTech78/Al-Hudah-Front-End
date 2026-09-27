@@ -3,12 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import style from "../styles/background.module.css";
 import Swal from "sweetalert2";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Logo from '../logo-removebg-preview.png'
 import Image from "next/image";
 import LandingPageNav from "@/Components/LandingPageNav";
+import api from "@/utils/api";
 
 const Login = () => {
   const router = useRouter();
@@ -35,8 +35,7 @@ const Login = () => {
     onSubmit: async (values) => {
       // console.log(values);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/parent/login",
+        const response = await api.post("/parent/login",
           values
         );
         // console.log(response)

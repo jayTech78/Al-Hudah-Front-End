@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
     Table,
     Thead,
@@ -46,8 +46,8 @@ const Income = () => {
     useEffect(() => {
         const fetchIncomes = async () => {
             try {
-                const { data } = await axios.get(
-                    "http://localhost:9500/income/getIncomes"
+                const { data } = await api.get(
+                    "/income/getIncomes"
                 );
                 if (data.status) {
                     // console.log(data.payments);
@@ -73,8 +73,8 @@ const Income = () => {
     useEffect(() => {
         const fetchSources = async () => {
             try {
-                const { data } = await axios.get(
-                    'http://localhost:9500/income/findSources'
+                const { data } = await api.get(
+                    '/income/findSources'
                 )
 
                 if (data.status) {
@@ -103,8 +103,8 @@ const Income = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
 
-                const response = await axios.post(
-                    "http://localhost:9500/income/addIncome",
+                const response = await api.post(
+                    "/income/addIncome",
                     values
                 );
 
@@ -123,8 +123,8 @@ const Income = () => {
     });
 
     const filterSources = async (source) => {
-        const response = await axios.get(
-            'http://localhost:9500/income/findBySource',
+        const response = await api.get(
+            '/income/findBySource',
             {
                 params: {
                     source: source
@@ -156,8 +156,8 @@ const Income = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
 
-                const response = await axios.post(
-                    "http://localhost:9500/income/updateIncome",
+                const response = await api.post(
+                    "/income/updateIncome",
                     { ...values, incomeRef: selectedIncome.incomeRef }
                 );
 
@@ -184,8 +184,8 @@ const Income = () => {
     //     return;
     //   }
 
-    //   axios
-    //     .get("http://localhost:9500/staff/getDashboard", {
+    //   api
+    //     .get("/staff/getDashboard", {
     //       headers: {
     //         Authorization: `Bearer ${token}`,
     //         "Content-Type": "application/json",

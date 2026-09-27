@@ -5,7 +5,7 @@ import {
   ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
   Input, FormControl, FormLabel, useDisclosure
 } from "@chakra-ui/react";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/PrincipalLayout";
 import { useRouter } from "next/router";
 
@@ -24,7 +24,7 @@ const TermAndSessionPage = () => {
   // Fetch sessions
   const fetchSessions = async () => {
     try {
-      const { data } = await axios.get("http://localhost:9500/session/getSessions");
+      const { data } = await api.get("/session/getSessions");
       setSessions(data.sessions || []);
     } catch (err) {
       console.error(err);
@@ -41,8 +41,8 @@ const TermAndSessionPage = () => {
   //       return;
   //     }
 
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -60,7 +60,7 @@ const TermAndSessionPage = () => {
   // Fetch terms
   const fetchTerms = async () => {
     try {
-      const { data } = await axios.get("http://localhost:9500/term/getTerms");
+      const { data } = await api.get("/term/getTerms");
       setTerms(data.terms || []);
     } catch (err) {
       console.error(err);
@@ -76,7 +76,7 @@ const TermAndSessionPage = () => {
   // Handle activation
   const setActive = async (id, type) => {
     try {
-      await axios.post(`http://localhost:9500/${type}/${id}/activate`);
+      await api.post(`/${type}/${id}/activate`);
       toast({ title: `${type} activated`, status: "success" });
       type === "session" ? fetchSessions() : fetchTerms();
     } catch (err) {
@@ -88,7 +88,7 @@ const TermAndSessionPage = () => {
   const handleSubmit = async () => {
     try {
       if (formType === "session") {
-        await axios.post("http://localhost:9500/session/createSession", {
+        await api.post("/session/createSession", {
           sessionName: formData.name,
           startDate: formData.startDate,
           endDate: formData.endDate,
@@ -96,7 +96,7 @@ const TermAndSessionPage = () => {
         fetchSessions();
         toast({ title: "Session created", status: "success" });
       } else {
-        await axios.post("http://localhost:9500/term/createTerm", {
+        await api.post("/term/createTerm", {
           termName: formData.name,
           startDate: formData.startDate,
           endDate: formData.endDate,
@@ -116,8 +116,8 @@ const TermAndSessionPage = () => {
   const handleUpdate = async () => {
   try {
     if (formType === "session") {
-      await axios.post(
-        `http://localhost:9500/session/updateSession/${selectedItem._id}`,
+      await api.post(
+        `/session/updateSession/${selectedItem._id}`,
         {
           sessionName: formData.name,
           startDate: formData.startDate,
@@ -132,8 +132,8 @@ const TermAndSessionPage = () => {
         status: "success",
       });
     } else {
-      await axios.post(
-        `http://localhost:9500/term/updateTerm/${selectedItem._id}`,
+      await api.post(
+        `/term/updateTerm/${selectedItem._id}`,
         {
           termName: formData.name,
           startDate: formData.startDate,

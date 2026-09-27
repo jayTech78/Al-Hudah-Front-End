@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Swal from "sweetalert2";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import style from "../../styles/SignUp.module.css";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import ParentSideNav from "@/Components/ParentSideNav";
@@ -20,8 +20,8 @@ const EditStudent = () => {
       if (router.query.studentId) {
         setStudentId(router.query.studentId);
         try {
-          const { data: response } = await axios.post(
-            "http://localhost:9500/student/findStudentById",
+          const { data: response } = await api.post(
+            "/student/findStudentById",
             {
               studentId: router.query.studentId,
               parent_Id: router.query.parent_Id,
@@ -83,8 +83,8 @@ const EditStudent = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/student/addStudent",
+        const response = await api.post(
+          "/student/addStudent",
           { ...values, parentId: router.query.parentId }
         );
         if (response.data.status) {

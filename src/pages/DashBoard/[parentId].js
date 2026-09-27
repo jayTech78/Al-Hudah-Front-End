@@ -25,19 +25,11 @@ import {
   Card,
   CardBody,
   Grid,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerBody,
-  IconButton,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
-import ParentSideNav from "@/Components/ParentSideNav";
 import EventCalendar from "@/Components/Calendar";
 import ParentLayout from "@/Components/ParentLayout";
-import axios from "axios";
+import api from '@/utils/api'
 
 export default function ParentDashboard() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -62,8 +54,8 @@ export default function ParentDashboard() {
       return;
     }
 
-    axios
-      .get("http://localhost:9500/parent/getDashboard", {
+    api
+      .get("/parent/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -79,18 +71,17 @@ export default function ParentDashboard() {
       .catch(() => router.push("/Login"));
   }, [router]);
 
-
   useEffect(() => {
     if (!parentId) return;
     // console.log("Fetching students for Parent ID:", parentId);
 
     const fetchStudents = async () => {
       try {
-        const response = await axios.post(
-          `http://localhost:9500/student/getStudentsByParentId/${parentId}`
+        const response = await api.post(
+          `/student/getStudentsByParentId/${parentId}`
         );
         // console.log(response.data);
-        setStudents(response.data.students);
+        setStudents(response.data.students || []);
       } catch (err) {
         setError("Failed to load students");
       } finally {
@@ -107,13 +98,12 @@ export default function ParentDashboard() {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/event/getEvents"
+        const { data: response } = await api.get("/event/getEvents"
         );
         setEvents(response.events || []);
         // console.log(response.events)
       } catch (error) {
-        console.error("Error fetching subjects:", error.message);
+        console.error("Error fetching events:", error.message);
       } finally {
         setLoading(false);
       }

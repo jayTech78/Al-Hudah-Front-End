@@ -17,7 +17,7 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import axios from "axios";
+import api from "@/utils/api";
 import TeacherLayout from "@/Components/TeacherLayout";
 
 export default function ParentDashboard() {
@@ -36,8 +36,8 @@ export default function ParentDashboard() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const { data } = await axios.post(
-          `http://localhost:9500/class/getStudentsByClassName/${className}`
+        const { data } = await api.post(
+          `/class/getStudentsByClassName/${className}`
         );
         setStudents(data.students || []);
       } catch (error) {
@@ -53,12 +53,12 @@ export default function ParentDashboard() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     if (!token || role !== "Teacher") {
-      router.push("/Login");
+      router.push("/StaffLogin");
       return;
     }
 
-    axios
-      .get("http://localhost:9500/staff/getDashboard", {
+    api
+      .get("/staff/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function ParentDashboard() {
       .then((response) => {
         // console.log(response.data);
         if (!response.data.status) {
-          router.push("/Login");
+          router.push("/StaffLogin");
         }
       })
       .catch(() => router.push("/Login"));
@@ -84,8 +84,8 @@ export default function ParentDashboard() {
     setLoading(true);
     try {
       const formattedDate = new Date(selectedDate).toISOString().split('T')[0]; // YYYY-MM-DD format
-      const { data } = await axios.get(
-        `http://localhost:9500/attendance/getAttendanceByDateAndClassName/${className}/${formattedDate}`
+      const { data } = await api.get(
+        `/attendance/getAttendanceByDateAndClassName/${className}/${formattedDate}`
       );
       setAttendanceData(data.gottenStudents);
     } catch (error) {
@@ -109,8 +109,8 @@ export default function ParentDashboard() {
     setLoading(true);
 
     try {
-      const { data } = await axios.get(
-        `http://localhost:9500/attendance/getAttendanceByStudentIdAndTerm/${studentId}/${term}`
+      const { data } = await api.get(
+        `/attendance/getAttendanceByStudentIdAndTerm/${studentId}/${term}`
       );
 
       console.log("API Response:", data);

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Image from "next/image";
@@ -52,8 +52,8 @@ const AddStaff = () => {
     onSubmit: async (values) => {
       console.log(values);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/staff/addStaff",
+        const response = await api.post(
+          "/staff/addStaff",
           values
         );
         if (response.data.status) {

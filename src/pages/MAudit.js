@@ -13,7 +13,7 @@ import {
   Thead,
   Tbody,
 } from "@chakra-ui/react";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/ManagerLayout";
 import Swal from "sweetalert2";
 
@@ -38,8 +38,8 @@ export default function ViewTransactions() {
         return;
       }
 
-      axios
-        .get("http://localhost:9500/staff/getDashboard", {
+      api
+        .get("/staff/getDashboard", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -55,8 +55,8 @@ export default function ViewTransactions() {
     }, [router]);
 
     try {
-      const response = await axios.post(
-        "http://localhost:9500/audit/getTransactionByStudentId",
+      const response = await api.post(
+        "/audit/getTransactionByStudentId",
         { studentId: selectedStudentId.trim() }
       );
 

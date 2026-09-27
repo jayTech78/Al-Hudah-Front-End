@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/ManagerLayout";
 import {
   Button,
@@ -66,8 +66,8 @@ const GetStaffs = () => {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //         "Content-Type": "application/json",
@@ -85,8 +85,8 @@ const GetStaffs = () => {
   useEffect(() => {
     const fetchStaffsByRole = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:9500/staff/getStaffsByRole"
+        const response = await api.get(
+          "/staff/getStaffsByRole"
         );
         setStaffsByRole(response.data.data);
       } catch (error) {
@@ -103,8 +103,8 @@ const GetStaffs = () => {
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:9500/staff/getStaffs"
+        const response = await api.get(
+          "/staff/getStaffs"
         );
         setStaffs(response.data.staffs);
         // console.log(response.data.staffs);
@@ -122,8 +122,8 @@ const GetStaffs = () => {
     const fetchClasses = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/class/getAllClasses"
+        const { data: response } = await api.get(
+          "/class/getAllClasses"
         );
         SetClasses(response.classes);
         // console.log(response.classes);
@@ -140,8 +140,8 @@ const GetStaffs = () => {
     const fetchRoles = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/role/getRoles"
+        const { data: response } = await api.get(
+          "/role/getRoles"
         );
         SetRoles(response.roles);
         // console.log(response.roles);
@@ -158,8 +158,8 @@ const GetStaffs = () => {
     const fetchSubjects = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/subject/getSubjects"
+        const { data: response } = await api.get(
+          "/subject/getSubjects"
         );
         setSubject(response.subjects);
         // console.log(response.subjects);
@@ -219,8 +219,8 @@ const GetStaffs = () => {
       formData.append("salary", values.salary);
       formData.append("subjectTaken", values.subjectTaken);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/staff/addStaff",
+        const response = await api.post(
+          "/staff/addStaff",
           values
         );
         if (response.data.status) {
@@ -272,8 +272,8 @@ const GetStaffs = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const { data: response } = await axios.post(
-            "http://localhost:9500/staff/deleteStaff",
+          const { data: response } = await api.post(
+            "/staff/deleteStaff",
             { staffId }
           );
 
@@ -347,8 +347,8 @@ const GetStaffs = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          `http://localhost:9500/staff/updateStaff/`,
+        const response = await api.post(
+          `/staff/updateStaff/`,
           { ...values, staffId: selectedStaff.staffId }
         );
 

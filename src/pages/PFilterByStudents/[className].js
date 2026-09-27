@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Box,
   Heading,
@@ -39,8 +39,8 @@ export default function StudentResultFilter() {
 
   const fetchSessions = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:9500/session/getSessions"
+      const { data } = await api.get(
+        "/session/getSessions"
       );
 
       setSessions(data.sessions || []);
@@ -51,8 +51,8 @@ export default function StudentResultFilter() {
 
   const fetchTerms = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:9500/term/getTerms"
+      const { data } = await api.get(
+        "/term/getTerms"
       );
 
       setTerms(data.terms || []);
@@ -73,15 +73,15 @@ export default function StudentResultFilter() {
     setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:9500/result/student",
+      const { data } = await api.post(
+        "/result/student",
         {
           studentId,
           session,
           term,
         }
       );
-      console.log(data.result)
+      // console.log(data.result)
       if (data.status && data.result) {
         setResult(data.result);
       } else {

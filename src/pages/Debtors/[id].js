@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Box,
   Heading,
@@ -35,8 +35,8 @@ export default function ClassDebtorsPage() {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //       },
@@ -56,8 +56,8 @@ export default function ClassDebtorsPage() {
 
     const fetchDebtors = async () => {
       try {
-        const { data } = await axios.post(
-          `http://localhost:9500/payment/getDebtorsByClass/${className}`
+        const { data } = await api.post(
+          `/payment/getDebtorsByClass/${className}`
         );
 
         console.log(data);

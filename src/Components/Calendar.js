@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import axios from "axios";
+import api from "@/utils/api";
 
 const EventCalendar = () => {
   const [events, setEvents] = useState([]);
@@ -11,8 +11,7 @@ const EventCalendar = () => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/event/getEvents"
+        const { data: response } = await api.get("/event/getEvents"
         );
 
         if (response.status && Array.isArray(response.events)) {

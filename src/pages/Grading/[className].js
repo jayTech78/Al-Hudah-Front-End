@@ -22,7 +22,7 @@ import {
   Thead,
   Tbody,
 } from "@chakra-ui/react";
-import axios from "axios";
+import api from "@/utils/api";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import TeacherSideNav from "@/Components/TeacherSideNav";
 import { useRouter } from "next/router";
@@ -50,8 +50,8 @@ export default function MarkAttendance() {
 
     const fetchData = async () => {
       try {
-        const res = await axios.post(
-          `http://localhost:9500/class/getStudentsAndSubjectsByClassName/${className}`
+        const res = await api.post(
+          `/class/getStudentsAndSubjectsByClassName/${className}`
         );
         setStudents(res.data.students || []);
         setSubjects(res.data.subjects || []);
@@ -70,8 +70,8 @@ export default function MarkAttendance() {
         return;
       }
 
-      const response = await axios.post(
-        "http://localhost:9500/grades/getGradeByStudentId",
+      const response = await api.post(
+        "/grades/getGradeByStudentId",
         { studentId: selectedStudentId }
       );
 
@@ -95,8 +95,8 @@ export default function MarkAttendance() {
         return;
       }
 
-      const response = await axios.post(
-        "http://localhost:9500/grades/getGradesBySubject",
+      const response = await api.post(
+        "/grades/getGradesBySubject",
         {
           subjectId: selectedSubjectId,
           session,
@@ -106,7 +106,7 @@ export default function MarkAttendance() {
       );
 
       if (response.data.status) {
-        console.log(response.data.data.total);
+        // console.log(response.data.data.total);
         setGradeBySubject(response.data.data);
         Swal.fire("Success", "Grades fetched successfully", "success");
         // setSubjectBySubject(response.data.)

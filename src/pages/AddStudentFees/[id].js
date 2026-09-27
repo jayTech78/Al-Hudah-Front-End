@@ -4,7 +4,7 @@ import { Checkbox, Stack, Spinner, Alert, AlertIcon } from "@chakra-ui/react";
 import NavBar from "@/Components/NavBar";
 import ParentSideNav from "@/Components/ParentSideNav";
 import style from "../../styles/Home.module.css";
-import axios from "axios";
+import api from "@/utils/api";
 import Swal from "sweetalert2";
 
 function IndeterminateExample() {
@@ -22,8 +22,8 @@ function IndeterminateExample() {
             setRoutedStudents(parsedStudents);
             setParentId(id);
             try {
-                const { data: response } = await axios.get(
-                    "http://localhost:9500/fees/getFees"
+                const { data: response } = await api.get(
+                    "/fees/getFees"
                 );
                 setFees(response.fees);
 
@@ -72,8 +72,8 @@ function IndeterminateExample() {
                 };
             });
     
-            const { data: response } = await axios.post(
-                "http://localhost:9500/student/saveSelectedFees",
+            const { data: response } = await api.post(
+                "/student/saveSelectedFees",
                 { feeSelections }  // Send fee selections including studentId
             );
     

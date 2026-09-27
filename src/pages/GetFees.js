@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import SideNav from "@/Components/SideNav";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import {
@@ -43,8 +43,8 @@ const GetFee = () => {
     const fetchFees = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/fees/getFees"
+        const { data: response } = await api.get(
+          "/fees/getFees"
         );
         SetFees(response.fees);
         console.log(response.fees);
@@ -69,8 +69,8 @@ const GetFee = () => {
     onSubmit: async (values, { setSubmitting }) => {
       console.log(values);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/fees/addFee",
+        const response = await api.post(
+          "/fees/addFee",
           values
         );
         if (response.data.status) {

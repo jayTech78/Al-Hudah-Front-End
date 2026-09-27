@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import style from "../styles/Home.module.css";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
-import axios from "axios";
+import api from "@/utils/api";
 import ParentSideNav from "@/Components/ParentSideNav";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import Image from "next/image";
@@ -41,8 +41,8 @@ const TransactionHistory = () => {
       return;
     }
 
-    axios
-      .get("http://localhost:9500/parent/getDashboard", {
+    api
+      .get("/parent/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -64,8 +64,8 @@ const TransactionHistory = () => {
       const fetchPayments = async () => {
         setLoading(true);
         try {
-          const { data: response } = await axios.post(
-            "http://localhost:9500/payment/paymentHistory",
+          const { data: response } = await api.post(
+            "/payment/paymentHistory",
             { parent_Id: router.query.parent_Id }
           );
           // console.log(response.payments)

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Box,
   Heading,
@@ -34,8 +34,8 @@ export default function ClassInfoPage() {
       return;
     }
 
-    axios
-      .get("http://localhost:9500/staff/getDashboard", {
+    api
+      .get("/staff/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -55,8 +55,8 @@ export default function ClassInfoPage() {
 
     const fetchClassInfo = async () => {
       try {
-        const response = await axios.post(
-          `http://localhost:9500/class/classInfo/${className}`
+        const response = await api.post(
+          `/class/classInfo/${className}`
         );
         setData(response.data);
       } catch (error) {

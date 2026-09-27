@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
 
   const linkItems = [
     {
-      href: "/dashboard",
+      href: "/PrincipalDashBoard",
       label: "Dashboard Overview",
     },
     {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
     Table,
     Thead,
@@ -41,9 +41,9 @@ const Expense = () => {
     //fetch expenses
     useEffect(() => {
         const fetchExpenses = async () => {
-            try {
-                const { data } = await axios.get(
-                    "http://localhost:9500/expense/getExpenses"
+            try {   
+                api.get(
+                    "/expense/getExpenses"
                 );
                 if (data.status) {
                     // console.log(data.payments);
@@ -70,8 +70,8 @@ const Expense = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const { data } = await axios.get(
-                    "http://localhost:9500/expense/findCategories"
+                const { data } = await api.get(
+                    "/expense/findCategories"
                 );
 
                 // console.log(data.categories)
@@ -100,8 +100,8 @@ const Expense = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
 
-                const response = await axios.post(
-                    "http://localhost:9500/expense/addExpense",
+                const response = await api.post(
+                    "/expense/addExpense",
                     values
                 );
 
@@ -122,8 +122,8 @@ const Expense = () => {
     //Filter Categories
     const filterCategory = async (category) => {
         // console.log(category)
-        const response = await axios.get(
-            "http://localhost:9500/expense/findByCategory",
+        const response = await api.get(
+            "/expense/findByCategory",
             {
                 params: {
                     category: category
@@ -154,8 +154,8 @@ const Expense = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
 
-                const response = await axios.post(
-                    "http://localhost:9500/expense/updateExpense",
+                const response = await api.post(
+                    "/expense/updateExpense",
                     { ...values, expenseRef: selectedExpense.expenseRef }
                 );
 
@@ -181,8 +181,8 @@ const Expense = () => {
     //     return;
     //   }
 
-    //   axios
-    //     .get("http://localhost:9500/staff/getDashboard", {
+    //   api
+    //     .get("/staff/getDashboard", {
     //       headers: {
     //         Authorization: `Bearer ${token}`,
     //         "Content-Type": "application/json",

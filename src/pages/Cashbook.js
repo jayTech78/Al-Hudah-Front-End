@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import api from "api";
 import Link from "next/link";
 import {
     Table,
@@ -41,11 +41,11 @@ const Cashbook = () => {
     useEffect(() => {
         const fetchCashbook = async () => {
             try {
-                const { data } = await axios.get(
-                    "http://localhost:9500/cashbook/getCashbook"
+                const { data } = await api.get(
+                    "/cashbook/getCashbook"
                 );
                 if (data.status) {
-                    console.log(data.entries);
+                    // console.log(data.entries);
                     setCashbooks(data.entries);
                 } else {
                     console.error("No entry found");
@@ -63,13 +63,13 @@ const Cashbook = () => {
     //   const token = localStorage.getItem("token");
     //   const role = (localStorage.getItem("role") || "").toLowerCase();
 
-    //   if (!token || role !== "manager") {
+    //   if (!token || role !== "bursar") {
     //     router.push("/StaffLogin");
     //     return;
     //   }
 
-    //   axios
-    //     .get("http://localhost:9500/staff/getDashboard", {
+    //   api
+    //     .get("/staff/getDashboard", {
     //       headers: {
     //         Authorization: `Bearer ${token}`,
     //         "Content-Type": "application/json",

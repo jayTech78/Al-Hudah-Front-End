@@ -1,6 +1,6 @@
 // ClassStudentTabs.js
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Tabs,
   TabList,
@@ -98,8 +98,8 @@ const ClassStudentTabs = () => {
           return;
         }
 
-        const response = await axios.post(
-          "http://localhost:9500/class/addClass",
+        const response = await api.post(
+          "/class/addClass",
           {
             ...values,
             classSubjects: selectedSubjects,
@@ -144,8 +144,8 @@ const ClassStudentTabs = () => {
         }
         console.log(values);
 
-        const response = await axios.post(
-          "http://localhost:9500/class/updateClass",
+        const response = await api.post(
+          "/class/updateClass",
           {
             ...values,
             classId: selectedClassId,
@@ -177,8 +177,8 @@ const ClassStudentTabs = () => {
     onSubmit: async (values, { resetForm }) => {
       try {
         const student = `${selectedStudent.surName} ${selectedStudent.otherNames}`;
-        const response = await axios.post(
-          "http://localhost:9500/class/addStudentToClass",
+        const response = await api.post(
+          "/class/addStudentToClass",
           { ...values, student }
         );
         if (response.data.status) {
@@ -229,8 +229,8 @@ const ClassStudentTabs = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const { data } = await axios.post(
-            "http://localhost:9500/class/deleteClass",
+          const { data } = await api.post(
+            "/class/deleteClass",
             { className }
           );
           if (data.status) {
@@ -255,12 +255,12 @@ const ClassStudentTabs = () => {
       try {
         const [feesRes, bookRes, teacherRes, subjectRes, studentRes, classRes] =
           await Promise.all([
-            axios.get("http://localhost:9500/fees/getFees"),
-            axios.get("http://localhost:9500/book/getBooks"),
-            axios.get("http://localhost:9500/staff/getTeachers"),
-            axios.get("http://localhost:9500/subject/getSubjects"),
-            axios.get("http://localhost:9500/student/getStudents"),
-            axios.get("http://localhost:9500/class/getAllClasses"),
+            api.get("/fees/getFees"),
+            api.get("/book/getBooks"),
+            api.get("/staff/getTeachers"),
+            api.get("/subject/getSubjects"),
+            api.get("/student/getStudents"),
+            api.get("/class/getAllClasses"),
           ]);
         setFees(feesRes.data.fees || []);
         setBooks(bookRes.data.books || []);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Table,
   Thead,
@@ -37,8 +37,8 @@ export default function GradingPage() {
 //       return;
 //     }
 
-//     axios
-//       .get("http://localhost:9500/staff/getDashboard", {
+//     api
+//       .get("staff/getDashboard", {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //           "Content-Type": "application/json",
@@ -55,8 +55,8 @@ export default function GradingPage() {
   const fetchClasses = async () => {
   setLoading(true);
   try {
-    const classesRes = await axios.get(
-      "http://localhost:9500/class/getAllClasses"
+    const classesRes = await api.get(
+      "/class/getAllClasses"
     );
 
     let allClasses = classesRes.data.classes || [];

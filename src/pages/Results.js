@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
 import ParentLayout from "@/Components/ParentLayout";
@@ -56,8 +56,8 @@ const StudentResult = () => {
 
       const token = localStorage.getItem("token");
 
-      const { data } = await axios.get(
-        `http://localhost:9500/grades/getStudentsResultsByParentId/${parentId}`,
+      const { data } = await api.get(
+        `/grades/getStudentsResultsByParentId/${parentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

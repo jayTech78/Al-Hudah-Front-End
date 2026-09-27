@@ -36,39 +36,39 @@ const Layout = ({ children }) => {
 
   const linkItems = [
     {
-      href: "/dashboard",
+      href: "/VPClasses",
       label: "Dashboard Overview",
     },
+    // {
+    //   href: "/Applications",
+    //   label: "Applications",
+    // },
     {
-      href: "/Applications",
-      label: "Applications",
-    },
-    {
-      href: "/PGetStudents",
+      href: "/VPGetStudents",
       label: "Student Management",
     },
     {
-      href: "/PSession",
+      href: "/VPSession",
       label: "Session/Term",
     },
     {
-      href: "/PClasses",
+      href: "/VPClasses",
       label: "Class Management",
     },
     {
-      href: "/PGetSubjects",
+      href: "/VPGetSubjects",
       label: "Subject Management",
     },
     {
-      href: "/PAttendance",
+      href: "/VPAttendance",
       label: "Attendance Management",
     },
     {
-      href: "/PGrading",
+      href: "/VPGrading",
       label: "Grade Management",
     },
     {
-      href: "/PGenerateBill",
+      href: "/VPGenerateBill",
       label: "Generate Bill",
     },
   ];

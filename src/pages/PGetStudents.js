@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import SideNav from "@/Components/SideNav";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import {
@@ -57,8 +57,8 @@ const GetStudents = () => {
     const fetchStudents = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/student/getStudents"
+        const { data: response } = await api.get(
+          "/student/getStudents"
         );
         setStudents(response.students);
         // console.log(response.students);
@@ -75,8 +75,8 @@ const GetStudents = () => {
     const fetchClasses = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/class/getClasses"
+        const { data: response } = await api.get(
+          "/class/getClasses"
         );
         SetClasses(response.classes || []);
         // console.log(response);
@@ -132,8 +132,8 @@ const GetStudents = () => {
       formData.append("schoolType", values.schoolingType);
       formData.append("previousSchool", values.previousSchool);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/student/addStudent",
+        const response = await api.post(
+          "/student/addStudent",
           values
         );
         if (response.data.status) {
@@ -159,8 +159,8 @@ const GetStudents = () => {
   //       return;
   //     }
 
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -187,8 +187,8 @@ const GetStudents = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
-            `http://localhost:9500/student/deleteStudent/`,
+          const response = await api.post(
+            `/student/deleteStudent/`,
             { studentId }
           );
           if (response.data.status) {
@@ -241,8 +241,8 @@ const GetStudents = () => {
       }),
       onSubmit: async (values, { setSubmitting }) => {
         try {
-          const response = await axios.post(
-            "http://localhost:9500/student/editStudent",
+          const response = await api.post(
+            "/student/editStudent",
             { ...values, studentId: selectedStudent.studentId } // Using state value for parentId
           );
           if (response.data.status) {

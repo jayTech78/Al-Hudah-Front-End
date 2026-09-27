@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import Link from "next/link";
 import {
   Table,
@@ -42,8 +42,8 @@ const ClassStudentTabs = () => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:9500/payment/getPayments"
+        const { data } = await api.get(
+          "/payment/getPayments"
         );
         if (data.status) {
           // console.log(data.payments);
@@ -69,8 +69,8 @@ const ClassStudentTabs = () => {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //         "Content-Type": "application/json",

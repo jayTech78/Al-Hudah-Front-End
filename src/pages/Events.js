@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/ManagerLayout";
 import {
     Button,
@@ -47,8 +47,8 @@ const GetEvents = () => {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                const { data: response } = await axios.get(
-                    "http://localhost:9500/event/getEvents"
+                const { data: response } = await api.get(
+                    "/event/getEvents"
                 );
                 setEvents(response.events || []);
             } catch (error) {
@@ -69,8 +69,8 @@ const GetEvents = () => {
             return;
           }
 
-          axios
-            .get("http://localhost:9500/staff/getDashboard", {
+          api
+            .get("/staff/getDashboard", {
               headers: {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
@@ -100,8 +100,8 @@ const GetEvents = () => {
         onSubmit: async (values, { setSubmitting }) => {
             console.log(values)
             try {
-                const { data: response } = await axios.post(
-                    "http://localhost:9500/event/addEvent",
+                const { data: response } = await api.post(
+                    "/event/addEvent",
                     values
                 );
                 if (response.status) {
@@ -137,8 +137,8 @@ const GetEvents = () => {
         }),
         onSubmit: async (values, { setSubmitting }) => {
             try {
-                const { data: response } = await axios.post(
-                    `http://localhost:9500/event/updateEvent/`,
+                const { data: response } = await api.post(
+                    `/event/updateEvent/`,
                     { ...values, eventId: selectedEvent.eventId }
                 );
                 if (response.status) {
@@ -176,8 +176,8 @@ const GetEvents = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const { data: response } = await axios.post(
-                        "http://localhost:9500/event/deleteEvent",
+                    const { data: response } = await api.post(
+                        "/event/deleteEvent",
                         { eventId }
                     );
                     if (response.status) {

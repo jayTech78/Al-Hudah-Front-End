@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
@@ -81,8 +81,8 @@ const StudentStatus = () => {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //       },
@@ -103,8 +103,8 @@ const StudentStatus = () => {
     try {
       setLoading(true);
 
-      const { data } = await axios.get(
-        "http://localhost:9500/disciplinary/get"
+      const { data } = await api.get(
+        "/disciplinary/get"
       );
 
       if (data.status) {
@@ -152,8 +152,8 @@ const StudentStatus = () => {
     try {
       setSearchingStudent(true);
 
-      const { data } = await axios.post(
-        "http://localhost:9500/disciplinary/searchStudent",
+      const { data } = await api.post(
+        "/disciplinary/searchStudent",
         {
           studentId,
         }
@@ -209,8 +209,8 @@ const StudentStatus = () => {
 
     onSubmit: async (values) => {
       try {
-        const { data } = await axios.post(
-          "http://localhost:9500/disciplinary/add",
+        const { data } = await api.post(
+          "/disciplinary/add",
           {
             studentId,
             status: values.status,
@@ -267,8 +267,8 @@ const StudentStatus = () => {
 
     onSubmit: async (values) => {
       try {
-        const { data } = await axios.put(
-          "http://localhost:9500/disciplinary/update",
+        const { data } = await api.put(
+          "/disciplinary/update",
           values
         );
 

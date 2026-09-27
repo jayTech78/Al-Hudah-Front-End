@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/ManagerLayout";
 import {
   Button,
@@ -46,8 +46,8 @@ const GetRoles = () => {
     const fetchRoles = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/role/getRoles"
+        const { data: response } = await api.get(
+          "/role/getRoles"
         );
         setRoles(response.roles || []);
       } catch (error) {
@@ -68,8 +68,8 @@ const GetRoles = () => {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //         "Content-Type": "application/json",
@@ -95,8 +95,8 @@ const GetRoles = () => {
     onSubmit: async (values, { setSubmitting }) => {
       console.log(values)
       try {
-        const { data: response } = await axios.post(
-          "http://localhost:9500/role/addRole",
+        const { data: response } = await api.post(
+          "/role/addRole",
           values
         );
         if (response.status) {
@@ -130,8 +130,8 @@ const GetRoles = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const { data: response } = await axios.post(
-          `http://localhost:9500/role/updateRole/`,
+        const { data: response } = await api.post(
+          `/role/updateRole/`,
           { ...values, roleId: selectedRole.roleId }
         );
         if (response.status) {
@@ -170,8 +170,8 @@ const GetRoles = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const { data: response } = await axios.post(
-            "http://localhost:9500/role/deleteRole",
+          const { data: response } = await api.post(
+            "/role/deleteRole",
             { roleId }
           );
           if (response.status) {

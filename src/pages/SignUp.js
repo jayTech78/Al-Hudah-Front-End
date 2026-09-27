@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Image from "next/image";
 import style from "../styles/background.module.css";
 import Logo from '../logo-removebg-preview.png'
 import LandingPageNav from "@/Components/LandingPageNav";
+import api from '@/utils/api'
 const ParentSignUp = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
@@ -51,8 +51,8 @@ const ParentSignUp = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/parent/parentSignUp",
+        const response = await api.post(
+          "/parent/parentSignUp",
           values
         );
         if (response.data.status) {
@@ -75,8 +75,8 @@ const ParentSignUp = () => {
   return (
     <div className={style.page}>
       <LandingPageNav></LandingPageNav>
-      <div className={style.bgLemonGreen}>
-        <div className="col-6 mx-auto border rounded-3 my-5 bg-light">
+      <div className={`${style.bgLemonGreen} m-4`}>
+        <div className="mx-auto border rounded-3 my-5 bg-light">
           <div className="d-flex justify-content-center">
             <Image
               alt="Logo"

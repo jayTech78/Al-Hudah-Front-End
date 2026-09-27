@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/ParentLayout";
 import dynamic from "next/dynamic";
 import { Box, Spinner } from "@chakra-ui/react";
@@ -56,8 +56,8 @@ const MCheckout = () => {
         setLoading(true);
         // console.log(selectedItems)
         // Fetch Parent Details
-        const parentResponse = await axios.post(
-          "http://localhost:9500/parent/findParentById",
+        const parentResponse = await api.post(
+          "/parent/findParentById",
           { id }
         );
 
@@ -73,8 +73,8 @@ const MCheckout = () => {
 
         // Fetch Student Details only if `studentId` is provided
         if (studentId) {
-          const studentResponse = await axios.post(
-            "http://localhost:9500/student/findStudentById",
+          const studentResponse = await api.post(
+            "/student/findStudentById",
             { studentId }
           );
 
@@ -107,8 +107,8 @@ const MCheckout = () => {
   //       return;
   //     }
 
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -133,8 +133,8 @@ const MCheckout = () => {
 
   const handlePaystackSuccessAction = async (reference) => {
     try {
-      const res = await axios.post(
-        "http://localhost:9500/payment/verifyPayment",
+      const res = await api.post(
+        "/payment/verifyPayment",
         reference
       );
 
@@ -153,8 +153,8 @@ const MCheckout = () => {
           selectedItems
         };
 
-        const response = await axios.post(
-          "http://localhost:9500/payment/addPayment",
+        const response = await api.post(
+          "/payment/addPayment",
           paymentObj
         );
         console.log(response.data)

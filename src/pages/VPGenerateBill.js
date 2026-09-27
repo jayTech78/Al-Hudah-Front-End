@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/VicePrincipalLayout";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
@@ -29,8 +29,8 @@ const GenerateBill = () => {
   //     return;
   //   }
 
-  //   axios
-  //     .get("http://localhost:9500/staff/getDashboard", {
+  //   api
+  //     .get("/staff/getDashboard", {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
   //         "Content-Type": "application/json",
@@ -51,10 +51,10 @@ const GenerateBill = () => {
       setLoading(true);
       try {
         const [classesRes, studentsRes, booksRes, feesRes] = await Promise.all([
-          axios.get("http://localhost:9500/class/getClasses"),
-          axios.get("http://localhost:9500/student/getStudents"),
-          axios.get("http://localhost:9500/book/getBooks"),
-          axios.get("http://localhost:9500/fees/getFees"),
+          api.get("/class/getClasses"),
+          api.get("/student/getStudents"),
+          api.get("/book/getBooks"),
+          api.get("/fees/getFees"),
         ]);
         setClasses(classesRes.data?.classes || []);
         setStudents(studentsRes.data?.students || []);
@@ -91,8 +91,8 @@ const GenerateBill = () => {
     }
 
     try {
-      const { data } = await axios.get(
-        `http://localhost:9500/student/checkStudentPayment/${found.studentId}`
+      const { data } = await api.get(
+        `/student/checkStudentPayment/${found.studentId}`
       );
 
       setSelectedItems([]);

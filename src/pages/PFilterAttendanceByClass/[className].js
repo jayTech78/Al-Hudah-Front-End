@@ -18,7 +18,7 @@ import {
 import { useRouter } from "next/router";
 import Layout from "@/Components/PrincipalLayout";
 // import ManagerNavBar from "@/Components/ManagerNavBar";
-import axios from "axios";
+import api from "@/utils/api";
 
 export default function ParentDashboard() {
   const [students, setStudents] = useState([]);
@@ -36,8 +36,8 @@ export default function ParentDashboard() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const { data } = await axios.post(
-          `http://localhost:9500/class/getStudentsByClassName/${className}`
+        const { data } = await api.post(
+          `/class/getStudentsByClassName/${className}`
         );
         setStudents(data.students || []);
       } catch (error) {
@@ -58,8 +58,8 @@ export default function ParentDashboard() {
 //       return;
 //     }
 
-//     axios
-//       .get("http://localhost:9500/staff/getDashboard", {
+//     api
+//       .get("/staff/getDashboard", {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
 //           "Content-Type": "application/json",
@@ -84,8 +84,8 @@ export default function ParentDashboard() {
     setLoading(true);
     try {
       const formattedDate = new Date(selectedDate).toISOString().split("T")[0]; // YYYY-MM-DD format
-      const { data } = await axios.get(
-        `http://localhost:9500/attendance/getAttendanceByDateAndClassName/${className}/${formattedDate}`
+      const { data } = await api.get(
+        `/attendance/getAttendanceByDateAndClassName/${className}/${formattedDate}`
       );
       setAttendanceData(data.gottenStudents);
     } catch (error) {
@@ -104,8 +104,8 @@ export default function ParentDashboard() {
     }
     setLoading(true);
     try {
-      const { data } = await axios.get(
-        `http://localhost:9500/attendance/getAttendanceByStudentIdAndTerm/${studentId}/${term}`
+      const { data } = await api.get(
+        `/attendance/getAttendanceByStudentIdAndTerm/${studentId}/${term}`
       );
       setFilterResults(data.data);
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Swal from "sweetalert2";
@@ -61,8 +61,8 @@ export default function AttendancePage() {
   //       router.push("/StaffLogin");
   //       return;
   //     }
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -94,12 +94,12 @@ export default function AttendancePage() {
     try {
       const [feesRes, bookRes, teacherRes, subjectRes, studentRes, classRes] =
         await Promise.all([
-          axios.get("http://localhost:9500/fees/getFees"),
-          axios.get("http://localhost:9500/book/getBooks"),
-          axios.get("http://localhost:9500/staff/getTeachers"),
-          axios.get("http://localhost:9500/subject/getSubjects"),
-          axios.get("http://localhost:9500/student/getStudents"),
-          axios.get("http://localhost:9500/class/getAllClasses"),
+          api.get("/fees/getFees"),
+          api.get("/book/getBooks"),
+          api.get("/staff/getTeachers"),
+          api.get("/subject/getSubjects"),
+          api.get("/student/getStudents"),
+          api.get("/class/getAllClasses"),
         ]);
 
       setFees(feesRes.data.fees || []);
@@ -173,8 +173,8 @@ export default function AttendancePage() {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/class/addClass",
+        const response = await api.post(
+          "/class/addClass",
           {
             ...values,
             classSubjects: selectedSubjects,
@@ -205,8 +205,8 @@ export default function AttendancePage() {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/class/updateClass",
+        const response = await api.post(
+          "/class/updateClass",
           {
             ...values,
             classId: selectedClassId,
@@ -239,8 +239,8 @@ export default function AttendancePage() {
     onSubmit: async (values, { resetForm }) => {
       try {
         const student = `${selectedStudent.surName} ${selectedStudent.otherNames}`;
-        const response = await axios.post(
-          "http://localhost:9500/class/addStudentToClass",
+        const response = await api.post(
+          "/class/addStudentToClass",
           {
             ...values,
             className: selectedClass.className, // ensure class is included
@@ -272,8 +272,8 @@ export default function AttendancePage() {
       try {
         // console.log(selectedStudent)
         // const student = `${selectedStudent.surName} ${selectedStudent.otherNames}`;
-        const response = await axios.post(
-          "http://localhost:9500/class/removeStudentFromClass",
+        const response = await api.post(
+          "/class/removeStudentFromClass",
           {
             ...values,
             className: selectedClass.className, // ensure class is included
@@ -299,8 +299,8 @@ export default function AttendancePage() {
   const deleteClass = async () => {
     try {
       console.log(selectedClass);
-      const response = await axios.post(
-        `http://localhost:9500/class/deleteClass/${selectedClass.classId}`
+      const response = await api.post(
+        `/class/deleteClass/${selectedClass.classId}`
       );
       if (response.data.status) {
         Swal.fire("Success", response.data.message, "success"); // After add, update, delete, assign, remove student

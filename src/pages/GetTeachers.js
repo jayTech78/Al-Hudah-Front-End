@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import SideNav from "@/Components/SideNav";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import {
@@ -43,8 +43,8 @@ const GetTeachers = () => {
     const fetchFees = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/staff/getTeachers"
+        const { data: response } = await api.get(
+          "/staff/getTeachers"
         );
         SetTeachers(response.staffs);
         console.log(response.staffs);
@@ -69,8 +69,8 @@ const GetTeachers = () => {
     onSubmit: async (values, { setSubmitting }) => {
       console.log(values);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/s/addTeacher",
+        const response = await api.post(
+          "/staff/addTeacher",
           values
         );
         if (response.data.status) {

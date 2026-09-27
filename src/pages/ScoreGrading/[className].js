@@ -21,7 +21,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import axios from "axios";
+import api from "@/utils/api";
 import ManagerNavBar from "@/Components/ParentNavBar";
 import TeacherSideNav from "@/Components/TeacherSideNav";
 import { useRouter } from "next/router";
@@ -43,8 +43,8 @@ export default function MarkAttendance() {
     const fetchData = async () => {
       if (!className) return;
       try {
-        const res = await axios.post(
-          `http://localhost:9500/class/getStudentsAndSubjectsByClassName/${className}`
+        const res = await api.post(
+          `/class/getStudentsAndSubjectsByClassName/${className}`
         );
         setStudents(res.data.students || []);
         setSubjects(res.data.subjects || []);
@@ -81,8 +81,8 @@ export default function MarkAttendance() {
         return;
       }
   
-      axios
-        .get("http://localhost:9500/staff/getDashboard", {
+      api
+        .get("/staff/getDashboard", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -126,8 +126,8 @@ export default function MarkAttendance() {
   }
 
   try {
-    console.log(payload)
-    await axios.post("http://localhost:9500/grades/record", payload);
+    // console.log(payload)
+    await api.post("/grades/record", payload);
     toast({ title: "Grades submitted successfully.", status: "success" });
     setSelectedSubject(null); // close modal
   } catch (error) {

@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Button,
   Modal,
@@ -50,8 +50,8 @@ const GetBooks = () => {
   //       return;
   //     }
   
-  //     axios
-  //       .get("http://localhost:9500/staff/getDashboard", {
+  //     api
+  //       .get("/staff/getDashboard", {
   //         headers: {
   //           Authorization: `Bearer ${token}`,
   //           "Content-Type": "application/json",
@@ -71,8 +71,8 @@ const GetBooks = () => {
     const fetchFees = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/fees/getFees"
+        const { data: response } = await api.get(
+          "/fees/getFees"
         );
         SetFees(response.fees);
         // console.log(response.fees);
@@ -103,8 +103,8 @@ const GetBooks = () => {
     onSubmit: async (values, { setSubmitting }) => {
       // console.log(values);
       try {
-        const response = await axios.post(
-          "http://localhost:9500/fees/addFee",
+        const response = await api.post(
+          "/fees/addFee",
           values
         );
         if (response.data.status) {
@@ -144,8 +144,8 @@ const GetBooks = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          `http://localhost:9500/fees/updateFee/`,
+        const response = await api.post(
+          `/fees/updateFee/`,
           {... values, feeId: selectedFee.feeId }
         );
   
@@ -180,8 +180,8 @@ const GetBooks = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
-            "http://localhost:9500/fees/deleteFee",
+          const response = await api.post(
+            "/fees/deleteFee",
             { feeId }
           );
           if (response.data.status) {
@@ -209,8 +209,8 @@ const GetBooks = () => {
     const fetchBooks = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/book/getBooks"
+        const { data: response } = await api.get(
+          "/book/getBooks"
         );
         setBooks(response.books);
       } catch (error) {
@@ -233,8 +233,8 @@ const GetBooks = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/book/addBook",
+        const response = await api.post(
+          "/book/addBook",
           values
         );
 
@@ -266,8 +266,8 @@ const GetBooks = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          `http://localhost:9500/book/updateBook/`,
+        const response = await api.post(
+          `/book/updateBook/`,
           { ...values, bookId: selectedBook.bookId } 
         );
 
@@ -310,8 +310,8 @@ const GetBooks = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.post(
-            "http://localhost:9500/book/deleteBook",
+          const response = await api.post(
+            "/book/deleteBook",
             { bookId }
           );
           if (response.data.status) {

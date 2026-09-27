@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import Layout from "@/Components/VicePrincipalLayout";
 import { useRouter } from "next/router";
 import {
@@ -27,8 +27,8 @@ export default function ClassGrades() {
       return;
     }
 
-    axios
-      .get("http://localhost:9500/staff/getDashboard", {
+    api
+      .get("/staff/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -55,8 +55,8 @@ export default function ClassGrades() {
   //         return;
   //       }
     
-  //       axios
-  //         .get("http://localhost:9500/staff/getDashboard", {
+  //       api
+  //         .get("/staff/getDashboard", {
   //           headers: {
   //             Authorization: `Bearer ${token}`,
   //             "Content-Type": "application/json",
@@ -74,8 +74,8 @@ export default function ClassGrades() {
   const fetchGrades = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        `http://localhost:9500/grades/getGradesByClass/${className}`
+      const res = await api.get(
+        `/grades/getGradesByClass/${className}`
       );
       setGrades(res.data.grades || []);
     } catch (error) {

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import LandingPageNav from "@/Components/LandingPageNav";
 import style from "../styles/background.module.css";
 import Logo from '../logo-removebg-preview.png'
 import Image from "next/image";
+import api from '@/utils/api'
 
 const StaffLogin = () => {
   const router = useRouter();
@@ -35,8 +35,8 @@ const StaffLogin = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/staff/login",
+        const response = await api.post(
+          "/staff/login",
           values
         );
         localStorage.token = response.data.token;

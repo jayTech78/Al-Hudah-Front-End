@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Table,
   Thead,
@@ -38,8 +38,8 @@ export default function AttendancePage() {
       return;
     }
 
-    axios
-      .get("http://localhost:9500/staff/getDashboard", {
+    api
+      .get("/staff/getDashboard", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -56,8 +56,8 @@ export default function AttendancePage() {
   const fetchAttendance = async (date, classId) => {
     setLoading(true);
     try {
-      const { data } = await axios.get(
-        `http://localhost:9500/attendance/getAttendanceForToday/${classId}/${date}`
+      const { data } = await api.get(
+        `/attendance/getAttendanceForToday/${classId}/${date}`
       );
       console.log(data);
       setAttendanceData(data.attendances || []);

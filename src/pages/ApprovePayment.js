@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "@/utils/api";
 import {
   Box,
   Button,
@@ -24,7 +24,7 @@ const ApprovePayment = () => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:9500/payment/getPaymentById", {
+      const response = await api.post("/payment/getPaymentById", {
         paymentRef,
       });
 
@@ -61,7 +61,7 @@ const ApprovePayment = () => {
 
   const handleApprovePayment = async () => {
     try {
-      const response = await axios.post("http://localhost:9500/payment/approvePayment", {
+      const response = await api.post("/payment/approvePayment", {
         paymentRef,
       });
 

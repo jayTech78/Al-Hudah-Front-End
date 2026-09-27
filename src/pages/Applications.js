@@ -27,7 +27,7 @@ import {
   FormErrorMessage,
   VStack,
 } from "@chakra-ui/react";
-import axios from "axios";
+import api from "@/utils/api";
 import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 
@@ -53,8 +53,8 @@ const Applications = () => {
     //     return;
     //   }
   
-    //   axios
-    //     .get("http://localhost:9500/staff/getDashboard", {
+    //   api
+    //     .get("/staff/getDashboard", {
     //       headers: {
     //         Authorization: `Bearer ${token}`,
     //         "Content-Type": "application/json",
@@ -83,8 +83,8 @@ const Applications = () => {
     const fetchApplications = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/student/getApplications"
+        const { data: response } = await api.get(
+          "/student/getApplications"
         );
         // console.log(response)
         setApplications(response.applications);
@@ -101,8 +101,8 @@ const Applications = () => {
     const fetchClasses = async () => {
       setLoading(true);
       try {
-        const { data: response } = await axios.get(
-          "http://localhost:9500/class/getClasses"
+        const { data: response } = await api.get(
+          "/class/getClasses"
         );
         setClasses(response.classes);
       } catch (error) {
@@ -127,8 +127,8 @@ const Applications = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        const response = await axios.post(
-          "http://localhost:9500/email/sendEntranceExamDate",
+        const response = await api.post(
+          "/email/sendEntranceExamDate",
           {
             entranceExamDate: values.entranceExamDate,
             studentName,
@@ -168,8 +168,8 @@ const Applications = () => {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         console.log(values)
-        const response = await axios.post(
-          "http://localhost:9500/email/sendAdmissionLetter",
+        const response = await api.post(
+          "/email/sendAdmissionLetter",
           {
             entranceExamScore: values.entranceExamScore,
             classAdmittedTo: values.classAdmittedTo,
@@ -198,8 +198,8 @@ const Applications = () => {
     try {
       const { studentId, parentId } = application;
 
-      const studentResponse = await axios.post(
-        "http://localhost:9500/student/findStudentById",
+      const studentResponse = await api.post(
+        "/student/findStudentById",
         { studentId }
       );
       if (studentResponse.data.status) {
@@ -208,8 +208,8 @@ const Applications = () => {
         setStudentName(studentName);
       }
 
-      const parentResponse = await axios.post(
-        "http://localhost:9500/parent/findParentById",
+      const parentResponse = await api.post(
+        "/parent/findParentById",
         { id: parentId }
       );
       if (parentResponse.data.status) {
@@ -230,8 +230,8 @@ const Applications = () => {
     try {
       const { studentId, parentId } = application;
 
-      const studentResponse = await axios.post(
-        "http://localhost:9500/student/findStudentById",
+      const studentResponse = await api.post(
+        "/student/findStudentById",
         { studentId }
       );
       if (studentResponse.data.status) {
@@ -241,8 +241,8 @@ const Applications = () => {
         setStudentId(studentId);
       }
 
-      const parentResponse = await axios.post(
-        "http://localhost:9500/parent/findParentById",
+      const parentResponse = await api.post(
+        "/parent/findParentById",
         { id: parentId }
       );
       if (parentResponse.data.status) {
